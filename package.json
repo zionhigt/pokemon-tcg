@@ -1,0 +1,20 @@
+{
+  "name": "pokemon-tcg",
+  "private": true,
+  "version": "0.1.0",
+  "description": "Jeu solo d'ouverture de boosters Pokémon : boutique, ouverture animée et galerie.",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "tsc --noEmit && vite build",
+    "preview": "vite preview",
+    "typecheck": "tsc --noEmit"
+  },
+  "devDependencies": {
+    "@types/node": "^22.20.5",
+    "typescript": "~5.9.3",
+    "vite": "^8.0.0",
+    "vite-plugin-pwa": "^2.0.0",
+    "workbox-window": "^7.4.1"
+  }
+}
