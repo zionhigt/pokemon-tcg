@@ -1,10 +1,15 @@
 import type { Card } from '../api';
+import { cardImage, cardName } from '../cardLang';
 import { h } from '../dom';
 import { tierIndex } from '../rarity';
 
 /** Carte avec effet holographique qui suit le pointeur pour les raretés holo et plus. */
 export function cardEl(card: Card, opts: { faceDown?: boolean; large?: boolean } = {}): HTMLElement {
   const shiny = tierIndex(card.tier) >= tierIndex('holo');
+  const { src, fallback } = cardImage(card, opts.large);
+  const img = h('img', { src, alt: cardName(card), loading: 'lazy', draggable: 'false' });
+  // Image française absente ou hors-ligne : on affiche la version anglaise
+  if (src !== fallback) img.addEventListener('error', () => (img.src = fallback), { once: true });
   const el = h(
     'div',
     { class: `card tier-${card.tier} ${shiny ? 'shiny' : ''} ${opts.faceDown ? 'face-down' : ''}` },
@@ -15,7 +20,7 @@ export function cardEl(card: Card, opts: { faceDown?: boolean; large?: boolean }
       h(
         'div',
         { class: 'card-front' },
-        h('img', { src: opts.large ? card.large : card.small, alt: card.name, loading: 'lazy', draggable: 'false' }),
+        img,
         shiny ? h('div', { class: 'card-holo' }) : null,
         shiny ? h('div', { class: 'card-glare' }) : null,
       ),

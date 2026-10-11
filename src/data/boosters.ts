@@ -4,6 +4,8 @@ export interface BoosterDef {
   id: string;
   /** Identifiant du set dans l'API pokemontcg.io */
   setId: string;
+  /** Identifiant du même set dans TCGdex (cartes en français) */
+  tcgdexId: string;
   name: string;
   subtitle: string;
   price: number;
@@ -24,6 +26,7 @@ export const BOOSTERS: BoosterDef[] = [
   {
     id: 'base',
     setId: 'base1',
+    tcgdexId: 'base1',
     name: 'Set de Base',
     subtitle: 'Le classique de 1999',
     price: 100,
@@ -35,6 +38,7 @@ export const BOOSTERS: BoosterDef[] = [
   {
     id: 'sv1',
     setId: 'sv1',
+    tcgdexId: 'sv01',
     name: 'Écarlate & Violet',
     subtitle: 'Bienvenue à Paldea',
     price: 180,
@@ -46,6 +50,7 @@ export const BOOSTERS: BoosterDef[] = [
   {
     id: '151',
     setId: 'sv3pt5',
+    tcgdexId: 'sv03.5',
     name: 'Pokémon 151',
     subtitle: 'Les originaux reviennent',
     price: 300,
@@ -57,6 +62,7 @@ export const BOOSTERS: BoosterDef[] = [
   {
     id: 'evs',
     setId: 'swsh7',
+    tcgdexId: 'swsh7',
     name: 'Évolution Céleste',
     subtitle: 'Les dragons dans le ciel',
     price: 450,
@@ -68,6 +74,7 @@ export const BOOSTERS: BoosterDef[] = [
   {
     id: 'crz',
     setId: 'swsh12pt5',
+    tcgdexId: 'swsh12.5',
     name: 'Zénith Suprême',
     subtitle: 'Le sommet de la collection',
     price: 700,

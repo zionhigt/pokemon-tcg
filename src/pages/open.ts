@@ -1,4 +1,5 @@
 import { loadSet, type Card } from '../api';
+import { cardImage, cardName, cardRarity } from '../cardLang';
 import { cardEl } from '../components/card';
 import { packEl } from '../components/pack';
 import { BOOSTERS, boosterById, type BoosterDef } from '../data/boosters';
@@ -102,7 +103,7 @@ export function openPage(root: HTMLElement, param?: string): () => void {
     drawInventory();
     hint.textContent = '';
     stage.scrollIntoView({ behavior: 'smooth', block: 'start' });
-    const loading = preload(cards.flatMap((c) => [c.small, c.large]));
+    const loading = preload(cards.flatMap((c) => [cardImage(c).src, cardImage(c, true).src]));
 
     pack.classList.remove('float');
     pack.classList.add('shake');
@@ -152,8 +153,8 @@ export function openPage(root: HTMLElement, param?: string): () => void {
         }
         label.replaceChildren(
           h('span', { class: `rarity-pill tier-${card.tier}` }, TIER_LABEL[card.tier]),
-          h('b', {}, card.name),
-          h('span', { class: 'muted' }, `${card.rarity} · ${credits(values[index])}`),
+          h('b', {}, cardName(card)),
+          h('span', { class: 'muted' }, `${cardRarity(card)} · ${credits(values[index])}`),
         );
         counter.textContent = `${index + 1} / ${cards.length}`;
       } else {

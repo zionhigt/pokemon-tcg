@@ -5,7 +5,11 @@
   "description": "Jeu solo d'ouverture de boosters Pokémon : boutique, ouverture animée et galerie.",
   "type": "module",
   "scripts": {
+    "assets": "node scripts/fetch-assets.mjs",
+    "assets:hires": "node scripts/fetch-assets.mjs --hires",
+    "predev": "node scripts/fetch-assets.mjs",
     "dev": "vite",
+    "prebuild": "node scripts/fetch-assets.mjs",
     "build": "tsc --noEmit && vite build",
     "preview": "vite preview",
     "typecheck": "tsc --noEmit"

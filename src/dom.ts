@@ -30,3 +30,43 @@ export function toast(message: string, kind: 'info' | 'good' | 'bad' = 'info'): 
   setTimeout(() => t.classList.add('out'), 2600);
   setTimeout(() => t.remove(), 3000);
 }
+
+/**
+ * Boîte de confirmation (remplace window.confirm). Entrée valide, Échap annule.
+ * `danger` met le focus sur « Annuler » pour éviter une validation réflexe.
+ */
+export function confirmDialog(opts: {
+  title: string;
+  body?: (Node | string | null)[];
+  confirm: string;
+  danger?: boolean;
+}): Promise<boolean> {
+  return new Promise((resolve) => {
+    const cancelBtn = h('button', { class: 'btn ghost' }, 'Annuler');
+    const okBtn = h('button', { class: `btn ${opts.danger ? 'danger' : 'primary'}` }, opts.confirm);
+    const box = h(
+      'div',
+      { class: 'modal confirm', role: 'alertdialog', 'aria-modal': 'true', 'aria-label': opts.title },
+      h('div', { class: 'modal-box confirm-box' }, h('h2', {}, opts.title), ...(opts.body ?? []), h('div', { class: 'actions' }, cancelBtn, okBtn)),
+    );
+    const done = (ok: boolean) => {
+      document.removeEventListener('keydown', onKey, true);
+      box.remove();
+      resolve(ok);
+    };
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key !== 'Escape') return;
+      // Ne ferme que cette boîte, pas une modale ouverte en dessous
+      e.stopImmediatePropagation();
+      done(false);
+    };
+    cancelBtn.onclick = () => done(false);
+    okBtn.onclick = () => done(true);
+    box.onclick = (e) => {
+      if (e.target === box) done(false);
+    };
+    document.addEventListener('keydown', onKey, true);
+    document.body.append(box);
+    (opts.danger ? cancelBtn : okBtn).focus();
+  });
+}

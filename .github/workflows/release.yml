@@ -35,6 +35,13 @@ jobs:
             echo "::error::Tag ${GITHUB_REF_NAME} ≠ version package.json ($PKG)"; exit 1
           fi
 
+      # Cache des assets entre les releases : le script ne télécharge que ce qui manque
+      - uses: actions/cache@v4
+        with:
+          path: public/tcg-cache
+          key: tcg-cache-${{ hashFiles('src/data/boosters.ts') }}
+          restore-keys: tcg-cache-
+
       - name: Build
         run: npm run build
         env:

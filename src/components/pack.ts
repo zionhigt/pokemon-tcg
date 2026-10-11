@@ -1,5 +1,6 @@
 import { mascotUrl, PACK_LAYOUT, type BoosterDef } from '../data/boosters';
 import { setLogoUrl } from '../api';
+import { asset } from '../assets';
 import { h } from '../dom';
 
 /** Emballage de booster : sachet aluminium dentelé avec logo du set et mascotte. */
@@ -15,8 +16,8 @@ export function packEl(def: BoosterDef, extraClass = ''): HTMLElement {
       { class: 'pack-body' },
       h('div', { class: 'pack-shine' }),
       h('div', { class: 'pack-brand' }, 'POKÉMON', h('small', {}, 'TRADING CARD GAME')),
-      h('img', { class: 'pack-logo', src: setLogoUrl(def.setId), alt: def.name, loading: 'lazy', draggable: 'false' }),
-      h('img', { class: 'pack-mascot', src: mascotUrl(def.mascot), alt: '', loading: 'lazy', draggable: 'false' }),
+      h('img', { class: 'pack-logo', src: asset(setLogoUrl(def.setId)), alt: def.name, loading: 'lazy', draggable: 'false' }),
+      h('img', { class: 'pack-mascot', src: asset(mascotUrl(def.mascot)), alt: '', loading: 'lazy', draggable: 'false' }),
       h('div', { class: 'pack-name' }, def.name),
       h('div', { class: 'pack-count' }, `${total} cartes`),
     ),

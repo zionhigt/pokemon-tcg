@@ -1,9 +1,11 @@
 import { cachedSet } from '../api';
+import { cardName, cardRarity, cardSetName, cardTypes, searchText } from '../cardLang';
 import { cardEl } from '../components/card';
 import { BOOSTERS } from '../data/boosters';
-import { credits, h, toast } from '../dom';
+import { credits, h } from '../dom';
 import { TIERS, TIER_LABEL, tierIndex, type Tier } from '../rarity';
-import { getState, sellCard, subscribe, toggleFavorite, type OwnedCard } from '../state';
+import { confirmSale } from '../sell';
+import { getState, planSale, subscribe, toggleFavorite, type OwnedCard } from '../state';
 
 type Sort = 'value' | 'rarity' | 'recent' | 'name' | 'number';
 
@@ -36,7 +38,7 @@ function sorter(sort: Sort): (a: OwnedCard, b: OwnedCard) => number {
     case 'recent':
       return (a, b) => b.lastAt - a.lastAt;
     case 'name':
-      return (a, b) => a.card.name.localeCompare(b.card.name, 'fr');
+      return (a, b) => cardName(a.card).localeCompare(cardName(b.card), 'fr');
     case 'number':
       return (a, b) => a.card.setId.localeCompare(b.card.setId) || (parseInt(a.card.number) || 0) - (parseInt(b.card.number) || 0);
   }
@@ -148,7 +150,7 @@ export function galleryPage(root: HTMLElement): () => void {
       .filter((o) => !f.tier || o.card.tier === f.tier)
       .filter((o) => !f.dupes || o.count > 1)
       .filter((o) => !f.favs || o.favorite)
-      .filter((o) => !q || o.card.name.toLowerCase().includes(q))
+      .filter((o) => !q || searchText(o.card).includes(q))
       .sort(sorter(f.sort));
     grid.replaceChildren();
     if (!list.length) {
@@ -158,11 +160,11 @@ export function galleryPage(root: HTMLElement): () => void {
     for (const o of list) {
       const tile = h(
         'button',
-        { class: `tile tier-${o.card.tier}`, 'aria-label': `${o.card.name}, ${o.count} exemplaire(s)` },
+        { class: `tile tier-${o.card.tier}`, 'aria-label': `${cardName(o.card)}, ${o.count} exemplaire(s)` },
         cardEl(o.card),
         o.count > 1 ? h('span', { class: 'badge count' }, `×${o.count}`) : null,
         o.favorite ? h('span', { class: 'badge fav' }, '★') : null,
-        h('span', { class: 'tile-meta' }, h('span', { class: 'tile-name' }, o.card.name), h('span', { class: 'tile-value' }, credits(o.value))),
+        h('span', { class: 'tile-meta' }, h('span', { class: 'tile-name' }, cardName(o.card)), h('span', { class: 'tile-value' }, credits(o.value))),
       );
       tile.onclick = () => openDetail(o.card.id);
       grid.append(tile);
@@ -182,19 +184,17 @@ export function galleryPage(root: HTMLElement): () => void {
     const fav = h('button', { class: `btn ${o.favorite ? 'primary' : ''}` }, o.favorite ? '★ Favori' : '☆ Mettre en favori');
     fav.onclick = () => toggleFavorite(id);
     const sell1 = h('button', { class: 'btn' }, `Vendre 1 · ${credits(o.value)}`);
-    sell1.onclick = () => toast(`Vendu pour ${credits(sellCard(id, 1))}`, 'good');
+    const sellQty = (qty: number) => void confirmSale(planSale([{ id, qty }]), `Vendre ${cardName(c)}`);
+    sell1.onclick = () => sellQty(1);
     const sellDupes = o.count > 1 ? h('button', { class: 'btn' }, `Vendre les doublons (${o.count - 1}) · ${credits((o.count - 1) * o.value)}`) : null;
-    if (sellDupes) sellDupes.onclick = () => toast(`Vendu pour ${credits(sellCard(id, o.count - 1))}`, 'good');
+    if (sellDupes) sellDupes.onclick = () => sellQty(o.count - 1);
     const sellAll = h('button', { class: 'btn danger' }, `Tout vendre (${o.count}) · ${credits(o.count * o.value)}`);
-    sellAll.onclick = () => {
-      if (o.favorite && !confirm('Cette carte est en favori. La vendre quand même ?')) return;
-      toast(`Vendu pour ${credits(sellCard(id, o.count))}`, 'good');
-    };
+    sellAll.onclick = () => sellQty(o.count);
     const close = h('button', { class: 'modal-close', 'aria-label': 'Fermer' }, '×');
     close.onclick = closeDetail;
     modal = h(
       'div',
-      { class: 'modal', role: 'dialog', 'aria-modal': 'true', 'aria-label': c.name, 'data-id': id },
+      { class: 'modal', role: 'dialog', 'aria-modal': 'true', 'aria-label': cardName(c), 'data-id': id },
       h(
         'div',
         { class: 'modal-box' },
@@ -204,13 +204,13 @@ export function galleryPage(root: HTMLElement): () => void {
           'div',
           { class: 'modal-info' },
           h('span', { class: `rarity-pill tier-${c.tier}` }, TIER_LABEL[c.tier]),
-          h('h2', {}, c.name),
+          h('h2', {}, cardName(c)),
           h(
             'dl',
             {},
-            h('dt', {}, 'Extension'), h('dd', {}, `${c.setName} · n°${c.number}`),
-            h('dt', {}, 'Rareté officielle'), h('dd', {}, c.rarity),
-            h('dt', {}, 'Type'), h('dd', {}, [c.supertype, ...c.types].join(' · ')),
+            h('dt', {}, 'Extension'), h('dd', {}, `${cardSetName(c)} · n°${c.number}`),
+            h('dt', {}, 'Rareté officielle'), h('dd', {}, cardRarity(c)),
+            h('dt', {}, 'Type'), h('dd', {}, cardTypes(c)),
             h('dt', {}, 'Exemplaires'), h('dd', {}, String(o.count)),
             h('dt', {}, 'Revente'), h('dd', {}, `${credits(o.value)} / carte`),
             c.market ? h('dt', {}, 'Cote réelle') : null, c.market ? h('dd', {}, `${c.market.toFixed(2)} $`) : null,

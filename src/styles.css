@@ -646,9 +646,12 @@ select {
 }
 .card-back {
   transform: rotateY(180deg);
-  background:
+  /* background:
     repeating-radial-gradient(circle at 50% 50%, transparent 0 14px, rgba(255, 255, 255, 0.04) 14px 16px),
-    radial-gradient(ellipse at 50% 50%, #3d7dca 0%, #1d3fa0 60%, #0f2263 100%);
+    radial-gradient(ellipse at 50% 50%, #3d7dca 0%, #1d3fa0 60%, #0f2263 100%); */
+  background-image: url("./images/back.png");
+  background-repeat: no-repeat;
+  background-size: cover;
   box-shadow: inset 0 0 0 6px #1a3a94, 0 6px 16px rgba(0, 0, 0, 0.45);
 }
 .card-back::before {
@@ -1274,4 +1277,119 @@ select {
     animation-iteration-count: 1 !important;
     transition-duration: 0.01ms !important;
   }
+}
+
+/* ---------- Confirmation ---------- */
+.modal.confirm {
+  z-index: 60;
+}
+.confirm-box {
+  flex-direction: column;
+  gap: 10px;
+  max-width: 440px;
+}
+.confirm-box h2 {
+  margin: 0;
+  font-size: 1.2rem;
+}
+.confirm-box p {
+  margin: 0;
+}
+.confirm-box .actions {
+  justify-content: flex-end;
+}
+.confirm-box .warn {
+  padding: 8px 12px;
+  border-radius: 10px;
+  background: rgba(255, 90, 110, 0.12);
+  border: 1px solid rgba(255, 90, 110, 0.35);
+  font-size: 0.9rem;
+}
+.confirm-total {
+  font-size: 1.4rem;
+  font-weight: 800;
+  color: var(--accent);
+}
+
+/* ---------- Revente en masse ---------- */
+.sell .chip {
+  margin-top: 8px;
+}
+.bulk-row {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(min(100%, 150px), 1fr));
+  gap: 8px;
+  margin: 14px 0 20px;
+}
+.btn.bulk {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 2px;
+  white-space: normal;
+  text-align: left;
+}
+.btn.bulk small {
+  font-weight: 600;
+  opacity: 0.8;
+}
+.btn.tier-btn {
+  border-left: 4px solid var(--tc);
+}
+.sell h3 {
+  margin: 0 0 10px;
+}
+.sell-btns {
+  display: flex;
+  flex: none !important;
+  flex-direction: row !important;
+  gap: 6px;
+}
+.sell-list .more,
+.sell-list .empty {
+  grid-column: 1 / -1;
+}
+
+/* ---------- Langue des cartes ---------- */
+.lang-switch {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+}
+.lang-switch span {
+  margin-right: 4px;
+}
+.lang-switch button {
+  font: inherit;
+  font-size: 0.78rem;
+  font-weight: 800;
+  padding: 3px 9px;
+  border-radius: 999px;
+  border: 1px solid var(--line);
+  background: transparent;
+  color: var(--muted);
+  cursor: pointer;
+}
+.lang-switch button.active {
+  background: var(--accent);
+  border-color: transparent;
+  color: #231a00;
+}
+.sell-search {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+.sell-search input {
+  flex: 1 1 200px;
+}
+/* Sur petit écran, les boutons de vente passent sous le nom plutôt que de l'écraser */
+.sell-row {
+  flex-wrap: wrap;
+}
+.sell-row > div:not(.sell-btns) {
+  min-width: 130px;
+}
+.sell-btns {
+  margin-left: auto;
 }

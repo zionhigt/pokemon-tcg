@@ -16,4 +16,5 @@ jobs:
           node-version: 22
           cache: npm
       - run: npm ci
-      - run: npm run build
+      # Vérifie le code uniquement : pas besoin de télécharger les assets (prebuild ignoré)
+      - run: npm run build --ignore-scripts

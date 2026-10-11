@@ -1,3 +1,4 @@
+import { hasLocal, localUrl } from './assets';
 import { tierOf, type Tier } from './rarity';
 
 /**
@@ -96,6 +97,25 @@ function writeCache(set: SetInfo): void {
   }
 }
 
+function toSet(setId: string, cards: ApiCard[]): SetInfo {
+  if (!cards.length) throw new Error(`Aucune carte trouvée pour le set ${setId}`);
+  const first = cards[0].set;
+  return {
+    id: setId,
+    name: first.name,
+    logo: first.images.logo,
+    symbol: first.images.symbol,
+    cards: cards.map(toCard),
+  };
+}
+
+/** Copie locale du set (générée par `npm run assets`), sans appel à l'API. */
+async function fetchLocalSet(setId: string): Promise<SetInfo> {
+  const res = await fetch(localUrl(`sets/${setId}.json`));
+  if (!res.ok) throw new Error(`Cache local : erreur ${res.status}`);
+  return toSet(setId, (await res.json()) as ApiCard[]);
+}
+
 async function fetchSet(setId: string): Promise<SetInfo> {
   const select = 'id,name,number,rarity,supertype,types,images,set,tcgplayer,cardmarket';
   const cards: ApiCard[] = [];
@@ -111,28 +131,20 @@ async function fetchSet(setId: string): Promise<SetInfo> {
     if (!json.data.length) break;
     page++;
   }
-  if (!cards.length) throw new Error(`Aucune carte trouvée pour le set ${setId}`);
-  const first = cards[0].set;
-  return {
-    id: setId,
-    name: first.name,
-    logo: first.images.logo,
-    symbol: first.images.symbol,
-    cards: cards.map(toCard),
-  };
+  return toSet(setId, cards);
 }
 
-/** Charge un set (cache mémoire → localStorage → réseau). */
+/** Charge un set (mémoire → fichier local → localStorage → API). Seul ce qui manque est requêté. */
 export function loadSet(setId: string): Promise<SetInfo> {
   const cached = memory.get(setId);
   if (cached) return cached;
-  const local = readCache(setId);
-  const p = local
-    ? Promise.resolve(local)
-    : fetchSet(setId).then((s) => {
-        writeCache(s);
-        return s;
-      });
+  const stored = readCache(setId);
+  const p = hasLocal(`sets/${setId}.json`)
+    ? fetchLocalSet(setId).catch(() => stored ?? fetchSet(setId))
+    : stored
+      ? Promise.resolve(stored)
+      : fetchSet(setId);
+  p.then((s) => s !== stored && writeCache(s)).catch(() => {});
   p.catch(() => memory.delete(setId));
   memory.set(setId, p);
   return p;

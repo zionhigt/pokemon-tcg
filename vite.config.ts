@@ -5,8 +5,13 @@ import pkg from './package.json' with { type: 'json' };
 // BASE_PATH est fourni par la CI pour GitHub Pages (ex: /pokemon-tcg/)
 const base = process.env.BASE_PATH ?? '/';
 
+// Sous WSL, les fichiers sur un disque Windows (/mnt/c…) n'émettent pas d'événements :
+// sans polling, le serveur de dev continue de servir l'ancien code après une modification.
+const onWindowsDrive = process.platform === 'linux' && /^\/mnt\/[a-z]\//.test(process.cwd());
+
 export default defineConfig({
   base,
+  server: { watch: onWindowsDrive ? { usePolling: true, interval: 300 } : undefined },
   define: {
     __APP_VERSION__: JSON.stringify(pkg.version),
   },
@@ -33,7 +38,41 @@ export default defineConfig({
       },
       workbox: {
         globPatterns: ['**/*.{js,css,html,svg,png,ico,webmanifest}'],
+        // Le cache d'assets local (npm run assets) est trop lourd pour le précache : chargé à la demande.
+        globIgnores: ['tcg-cache/**'],
         runtimeCaching: [
+          {
+            urlPattern: /\/tcg-cache\/manifest\.json$/,
+            handler: 'NetworkFirst',
+            options: { cacheName: 'local-manifest' },
+          },
+          {
+            urlPattern: /\/tcg-cache\/(img|tcgdex|mascots|sets)\//,
+            handler: 'CacheFirst',
+            options: {
+              cacheName: 'local-assets',
+              expiration: { maxEntries: 3000, maxAgeSeconds: 60 * 60 * 24 * 90 },
+              cacheableResponse: { statuses: [200] },
+            },
+          },
+          {
+            urlPattern: /^https:\/\/api\.tcgdex\.net\/.*/i,
+            handler: 'StaleWhileRevalidate',
+            options: {
+              cacheName: 'tcgdex-api',
+              expiration: { maxEntries: 50, maxAgeSeconds: 60 * 60 * 24 * 30 },
+              cacheableResponse: { statuses: [0, 200] },
+            },
+          },
+          {
+            urlPattern: /^https:\/\/assets\.tcgdex\.net\/.*/i,
+            handler: 'CacheFirst',
+            options: {
+              cacheName: 'tcgdex-images',
+              expiration: { maxEntries: 2000, maxAgeSeconds: 60 * 60 * 24 * 90 },
+              cacheableResponse: { statuses: [0, 200] },
+            },
+          },
           {
             urlPattern: /^https:\/\/api\.pokemontcg\.io\/.*/i,
             handler: 'StaleWhileRevalidate',

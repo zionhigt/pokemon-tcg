@@ -3,3 +3,6 @@ dist
 dev-dist
 *.local
 .DS_Store
+
+# Assets téléchargés par `npm run assets` (cache local par projet)
+public/tcg-cache

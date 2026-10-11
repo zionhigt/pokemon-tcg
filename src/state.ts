@@ -117,30 +117,57 @@ export function openPack(boosterId: string, cards: Card[]): number[] {
   return values;
 }
 
-export function sellCard(cardId: string, qty = 1): number {
-  const owned = state.collection[cardId];
-  if (!owned) return 0;
-  const n = Math.min(qty, owned.count);
-  const gain = n * owned.value;
-  owned.count -= n;
-  if (owned.count <= 0) delete state.collection[cardId];
-  state.credits += gain;
-  state.stats.sold += n;
-  state.stats.earned += gain;
-  commit();
-  return gain;
+export interface Sale {
+  id: string;
+  qty: number;
 }
 
-/** Vend tous les exemplaires en double (garde 1 exemplaire, ignore les favoris). */
-export function sellDuplicates(): { count: number; gain: number } {
-  let count = 0;
-  let gain = 0;
-  for (const owned of Object.values(state.collection)) {
-    if (owned.favorite || owned.count <= 1) continue;
-    const n = owned.count - 1;
-    owned.count = 1;
-    count += n;
-    gain += n * owned.value;
+export interface SalePlan {
+  sales: Sale[];
+  /** Nombre de cartes vendues */
+  count: number;
+  gain: number;
+  /** Cartes dont on vend le dernier exemplaire (elles quittent la collection) */
+  lost: OwnedCard[];
+  /** Favoris inclus dans la vente */
+  favorites: OwnedCard[];
+}
+
+/** Résume une vente sans l'exécuter (pour la confirmation). */
+export function planSale(sales: Sale[]): SalePlan {
+  const plan: SalePlan = { sales: [], count: 0, gain: 0, lost: [], favorites: [] };
+  for (const { id, qty } of sales) {
+    const owned = state.collection[id];
+    const n = owned ? Math.min(qty, owned.count) : 0;
+    if (n <= 0) continue;
+    plan.sales.push({ id, qty: n });
+    plan.count += n;
+    plan.gain += n * owned.value;
+    if (n === owned.count) plan.lost.push(owned);
+    if (owned.favorite) plan.favorites.push(owned);
+  }
+  return plan;
+}
+
+/**
+ * Vente en masse : toutes les cartes qui passent le filtre, favoris toujours exclus.
+ * `keepOne` conserve un exemplaire de chaque carte (= vendre les doublons).
+ */
+export function planBulk(filter: (o: OwnedCard) => boolean, keepOne: boolean): SalePlan {
+  return planSale(
+    Object.values(state.collection)
+      .filter((o) => !o.favorite && filter(o))
+      .map((o) => ({ id: o.card.id, qty: keepOne ? o.count - 1 : o.count })),
+  );
+}
+
+export function sell(sales: Sale[]): { count: number; gain: number } {
+  const { count, gain } = planSale(sales);
+  for (const { id, qty } of sales) {
+    const owned = state.collection[id];
+    if (!owned) continue;
+    owned.count -= Math.min(qty, owned.count);
+    if (owned.count <= 0) delete state.collection[id];
   }
   state.credits += gain;
   state.stats.sold += count;

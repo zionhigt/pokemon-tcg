@@ -1,5 +1,7 @@
 import './styles.css';
 import { registerSW } from 'virtual:pwa-register';
+import { loadManifest } from './assets';
+import { getCardLang, loadFrench, setCardLang, type CardLang } from './cardLang';
 import { BOOSTERS } from './data/boosters';
 import { credits, h, toast } from './dom';
 import { galleryPage } from './pages/gallery';
@@ -37,6 +39,34 @@ reset.onclick = () => {
   }
 };
 
+// Langue des cartes : l'interface reste en français, seuls noms et images changent.
+const langSwitch = h('div', { class: 'lang-switch', role: 'group', 'aria-label': 'Langue des cartes' });
+const drawLangSwitch = () =>
+  langSwitch.replaceChildren(
+    h('span', {}, 'Cartes'),
+    ...(['fr', 'en'] as CardLang[]).map((l) => {
+      const b = h('button', { class: getCardLang() === l ? 'active' : '', 'aria-pressed': getCardLang() === l }, l.toUpperCase());
+      b.onclick = () => {
+        if (getCardLang() === l) return;
+        setCardLang(l);
+        drawLangSwitch();
+        void prepareLang().then(route);
+        toast(l === 'fr' ? 'Cartes en français' : 'Cartes en anglais', 'info');
+      };
+      return b;
+    }),
+  );
+drawLangSwitch();
+
+/** Données françaises : attendues au plus 3 s, puis la page se redessine quand elles arrivent. */
+function prepareLang(): Promise<void> {
+  if (getCardLang() !== 'fr') return Promise.resolve();
+  const ready = loadFrench(BOOSTERS);
+  return Promise.race([ready, new Promise<void>((r) => setTimeout(r, 3000))]).then(() => {
+    ready.then(route, () => {});
+  });
+}
+
 app.append(
   h(
     'header',
@@ -50,6 +80,7 @@ app.append(
     'footer',
     { class: 'footer' },
     h('span', {}, `v${VERSION}`),
+    langSwitch,
     h('span', {}, 'Données : ', h('a', { href: 'https://pokemontcg.io', target: '_blank', rel: 'noopener' }, 'Pokémon TCG API')),
     reset,
   ),
@@ -99,7 +130,8 @@ subscribe(() => {
 });
 window.addEventListener('hashchange', route);
 renderWallet();
-route();
+// Le manifeste (local, minuscule) indique quels assets servir depuis le cache du projet.
+void loadManifest().then(prepareLang).finally(route);
 
 // Mise à jour de la PWA : on propose de recharger quand une nouvelle release est disponible.
 const updateSW = registerSW({
