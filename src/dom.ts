@@ -70,3 +70,29 @@ export function confirmDialog(opts: {
     (opts.danger ? cancelBtn : okBtn).focus();
   });
 }
+
+/** Fenêtre modale de sélection ; renvoie la fonction de fermeture. */
+export function sheet(title: string, ...content: (Node | string | null)[]): () => void {
+  const close = h('button', { class: 'modal-close', 'aria-label': 'Fermer' }, '×');
+  const box = h(
+    'div',
+    { class: 'modal', role: 'dialog', 'aria-modal': 'true', 'aria-label': title },
+    h('div', { class: 'modal-box sheet-box' }, close, h('h2', {}, title), ...content),
+  );
+  const done = () => {
+    document.removeEventListener('keydown', onKey, true);
+    box.remove();
+  };
+  const onKey = (e: KeyboardEvent) => {
+    if (e.key !== 'Escape') return;
+    e.stopImmediatePropagation();
+    done();
+  };
+  close.onclick = done;
+  box.onclick = (e) => {
+    if (e.target === box) done();
+  };
+  document.addEventListener('keydown', onKey, true);
+  document.body.append(box);
+  return done;
+}

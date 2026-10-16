@@ -23,12 +23,28 @@ export interface Stats {
   spent: number;
 }
 
+export interface TeamSlot {
+  cardId: string;
+  /** Ids des cartes Énergie de base équipées */
+  energies: string[];
+}
+
+export interface ArenaProgress {
+  /** Ids des champions battus au moins une fois */
+  badges: string[];
+  wins: number;
+  losses: number;
+}
+
 export interface GameState {
   credits: number;
   /** Boosters scellés en inventaire : boosterId → quantité */
   packs: Record<string, number>;
   collection: Record<string, OwnedCard>;
   stats: Stats;
+  /** Équipe de combat (jusqu'à 3 Pokémon) */
+  team: TeamSlot[];
+  arena: ArenaProgress;
 }
 
 function fresh(): GameState {
@@ -37,6 +53,8 @@ function fresh(): GameState {
     packs: {},
     collection: {},
     stats: { opened: 0, bought: 0, sold: 0, earned: 0, spent: 0 },
+    team: [],
+    arena: { badges: [], wins: 0, losses: 0 },
   };
 }
 
@@ -192,6 +210,80 @@ export function rescueIfBroke(minPrice: number): number {
   state.credits += grant;
   commit();
   return grant;
+}
+
+/* ---------- Équipe & arènes ---------- */
+
+/**
+ * Exemplaires d'une carte encore libres pour l'équipe (une carte vendue ou déjà
+ * équipée ailleurs ne peut pas l'être deux fois).
+ */
+export function freeCopies(cardId: string, except?: { slot: number; energy?: number }): number {
+  const owned = state.collection[cardId]?.count ?? 0;
+  let used = 0;
+  state.team.forEach((t, i) => {
+    if (t.cardId === cardId && !(except && except.slot === i && except.energy === undefined)) used++;
+    t.energies.forEach((e, j) => {
+      if (e === cardId && !(except && except.slot === i && except.energy === j)) used++;
+    });
+  });
+  return owned - used;
+}
+
+/** Retire de l'équipe les cartes qui ne sont plus dans la collection (vendues). */
+export function sanitizeTeam(): void {
+  const before = JSON.stringify(state.team);
+  const team: TeamSlot[] = [];
+  const left = new Map<string, number>();
+  const take = (id: string) => {
+    const n = left.get(id) ?? state.collection[id]?.count ?? 0;
+    if (n <= 0) return false;
+    left.set(id, n - 1);
+    return true;
+  };
+  for (const t of state.team) {
+    if (!take(t.cardId)) continue;
+    team.push({ cardId: t.cardId, energies: t.energies.filter(take) });
+  }
+  state.team = team;
+  if (JSON.stringify(team) !== before) commit();
+}
+
+export function setTeamSlot(index: number, cardId: string | null): void {
+  if (cardId === null) state.team.splice(index, 1);
+  else if (state.team[index]) state.team[index] = { cardId, energies: state.team[index].energies };
+  else state.team.push({ cardId, energies: [] });
+  commit();
+}
+
+export function setSlotEnergies(index: number, energies: string[]): void {
+  const slot = state.team[index];
+  if (!slot) return;
+  slot.energies = energies;
+  commit();
+}
+
+/** Enregistre un combat ; renvoie la récompense (crédits + booster éventuel). */
+export function recordBattle(
+  leaderId: string,
+  won: boolean,
+  reward: { credits: number; booster: string },
+): { credits: number; booster: string | null; badge: boolean } {
+  if (!won) {
+    state.arena.losses++;
+    commit();
+    return { credits: 0, booster: null, badge: false };
+  }
+  const first = !state.arena.badges.includes(leaderId);
+  const credits = first ? reward.credits : Math.round(reward.credits / 2);
+  state.arena.wins++;
+  state.credits += credits;
+  if (first) {
+    state.arena.badges.push(leaderId);
+    state.packs[reward.booster] = (state.packs[reward.booster] ?? 0) + 1;
+  }
+  commit();
+  return { credits, booster: first ? reward.booster : null, badge: first };
 }
 
 export function resetGame(): void {

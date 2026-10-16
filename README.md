@@ -6,12 +6,29 @@ Jeu solo d'ouverture de boosters Pokémon, en **TypeScript + Vite**, installable
   en masse (doublons, par rareté, toute la collection) ou à l'unité, toujours avec confirmation.
 - **Ouverture** : déchire le booster, révèle les cartes une à une (effet holo, aura quand une ultra/secrète arrive).
 - **Cartes en français ou en anglais** : réglage FR / EN en bas de page (noms, images, rareté, extension).
+- **Arènes** : mode histoire, 8 champions de Kanto à battre dans l'ordre avec une équipe de 3 Pokémon (voir plus bas).
 - **Galerie** : collection filtrable (extension, rareté, doublons, favoris), progression par set, revente à l'unité.
 
 Tu commences avec **500 ₽**. Chaque booster rapporte **toujours plus que son prix** à la revente :
 le pire tirage possible (6 communes, 3 peu communes, 1 rare) vaut 108 % du prix du booster.
 Pour en profiter il faut revendre aussi ses exemplaires uniques : décoche « Garder 1 exemplaire »
 dans la boutique. Les favoris (★) ne partent jamais dans une vente en masse.
+
+## Arènes (mode histoire)
+
+Les combats utilisent les vraies stats des cartes : PV, attaques (coût en énergies et dégâts de base),
+faiblesses, résistances et coût de retraite. Les effets écrits sur les cartes ne sont pas gérés :
+chaque type a à la place un bonus simple (brûlure Feu, poison Plante, paralysie Électrique, soin Eau…, voir `src/battle/types.ts`).
+
+- Équipe de 3 Pokémon, chacun avec jusqu'à 2 cartes Énergie de base de la collection.
+  Une Énergie s'active une fois par combat et multiplie par 1,5 une attaque de son type.
+- Hors jeu (masqués dans l'équipe et au changement de Pokémon) : cartes Dresseur, Énergies spéciales,
+  Pokémon sans attaque offensive et attaques sans dégâts.
+- Chaque Pokémon actif gagne 1 énergie par tour ; une attaque coûte autant d'énergies que de symboles.
+- Les équipes des champions sont tirées des vraies cartes des extensions (type du champion, PV croissants).
+- Récompenses : crédits, badge et booster offert à la première victoire ; revanche à moitié prix.
+
+Règles : `src/battle/rules.ts`, moteur et IA : `src/battle/engine.ts`, champions : `src/data/leaders.ts`.
 
 ## Données
 
