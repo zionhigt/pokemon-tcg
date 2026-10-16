@@ -61,7 +61,7 @@ async function download(url, path) {
 
 /** Même format que fetchSet() dans src/api.ts (URL distantes, résolues côté client). */
 async function fetchSet(setId) {
-  const select = 'id,name,number,rarity,supertype,types,images,set,tcgplayer,cardmarket';
+  const select = 'id,name,number,rarity,supertype,subtypes,types,hp,attacks,weaknesses,resistances,convertedRetreatCost,images,set,tcgplayer,cardmarket';
   const cards = [];
   for (let page = 1, total = Infinity; cards.length < total; page++) {
     const res = await get(`${API}/cards?q=set.id:${encodeURIComponent(setId)}&pageSize=250&page=${page}&select=${select}`);
@@ -143,7 +143,10 @@ async function main() {
     let cards;
     if (!REFRESH && (await exists(path))) {
       cards = JSON.parse(await readFile(path, 'utf8'));
-    } else {
+      // Ancien format sans stats de combat (avant le mode Arènes) : on re-télécharge
+      if (!cards.some((c) => c.supertype === 'Pokémon' && c.hp)) cards = undefined;
+    }
+    if (!cards) {
       try {
         process.stdout.write(`Set ${setId}… `);
         cards = await fetchSet(setId);

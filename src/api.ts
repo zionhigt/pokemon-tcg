@@ -7,7 +7,9 @@ import { tierOf, type Tier } from './rarity';
  * leurs images et leur prix de marché (TCGplayer / Cardmarket).
  */
 const API = 'https://api.pokemontcg.io/v2';
-const CACHE_PREFIX = 'ptcg:set:';
+// v2 : les sets contiennent aussi les stats de combat (PV, attaques, faiblesses…)
+const CACHE_PREFIX = 'ptcg:set:v2:';
+const OLD_CACHE = /^ptcg:set:(?!v2:)/;
 const CACHE_TTL = 1000 * 60 * 60 * 24 * 7;
 
 export interface Card {
@@ -24,6 +26,27 @@ export interface Card {
   large: string;
   /** Prix de marché en USD (0 si inconnu) */
   market: number;
+  /** Basic, Stage 1, ex, V… (Pokémon) ou Basic / Special (Énergie) */
+  subtypes?: string[];
+  hp?: number;
+  attacks?: Attack[];
+  weaknesses?: TypeMod[];
+  resistances?: TypeMod[];
+  retreat?: number;
+}
+
+export interface Attack {
+  name: string;
+  /** Types d'énergie du coût (ex. ["Fire", "Colorless"]) */
+  cost: string[];
+  /** Dégâts de base ("30+", "20×" → 30, 20) ; 0 pour une attaque à effet seul */
+  damage: number;
+}
+
+export interface TypeMod {
+  type: string;
+  /** "×2", "-30", "+20" tels qu'imprimés sur la carte */
+  value: string;
 }
 
 export interface SetInfo {
@@ -43,6 +66,12 @@ interface ApiCard {
   types?: string[];
   images: { small: string; large: string };
   set: { id: string; name: string; images: { logo: string; symbol: string } };
+  subtypes?: string[];
+  hp?: string;
+  attacks?: { name: string; cost?: string[]; damage?: string }[];
+  weaknesses?: TypeMod[];
+  resistances?: TypeMod[];
+  convertedRetreatCost?: number;
   tcgplayer?: { prices?: Record<string, { market?: number; mid?: number }> };
   cardmarket?: { prices?: { averageSellPrice?: number; trendPrice?: number } };
 }
@@ -72,10 +101,31 @@ function toCard(c: ApiCard): Card {
     small: c.images.small,
     large: c.images.large,
     market: Math.round(marketPrice(c) * 100) / 100,
+    subtypes: c.subtypes,
+    hp: c.hp ? parseInt(c.hp) || undefined : undefined,
+    attacks: c.attacks?.map((a) => ({ name: a.name, cost: a.cost ?? [], damage: parseInt(a.damage ?? '') || 0 })),
+    weaknesses: c.weaknesses,
+    resistances: c.resistances,
+    retreat: c.convertedRetreatCost,
   };
 }
 
+/** Champs demandés à l'API (aussi utilisés par scripts/fetch-assets.mjs). */
+const SELECT = 'id,name,number,rarity,supertype,subtypes,types,hp,attacks,weaknesses,resistances,convertedRetreatCost,images,set,tcgplayer,cardmarket';
+
+/** Les anciens fichiers (avant le mode Arènes) n'ont pas les stats de combat. */
+function hasBattleData(cards: ApiCard[]): boolean {
+  return cards.some((c) => c.supertype === 'Pokémon' && c.hp);
+}
+
 const memory = new Map<string, Promise<SetInfo>>();
+
+// Libère la place occupée par les sets en cache dans l'ancien format.
+try {
+  for (const k of Object.keys(localStorage)) if (OLD_CACHE.test(k)) localStorage.removeItem(k);
+} catch {
+  /* ignore */
+}
 
 function readCache(setId: string): SetInfo | null {
   try {
@@ -113,16 +163,17 @@ function toSet(setId: string, cards: ApiCard[]): SetInfo {
 async function fetchLocalSet(setId: string): Promise<SetInfo> {
   const res = await fetch(localUrl(`sets/${setId}.json`));
   if (!res.ok) throw new Error(`Cache local : erreur ${res.status}`);
-  return toSet(setId, (await res.json()) as ApiCard[]);
+  const cards = (await res.json()) as ApiCard[];
+  if (!hasBattleData(cards)) throw new Error('Cache local sans stats de combat');
+  return toSet(setId, cards);
 }
 
 async function fetchSet(setId: string): Promise<SetInfo> {
-  const select = 'id,name,number,rarity,supertype,types,images,set,tcgplayer,cardmarket';
   const cards: ApiCard[] = [];
   let page = 1;
   let total = Infinity;
   while (cards.length < total) {
-    const url = `${API}/cards?q=set.id:${encodeURIComponent(setId)}&pageSize=250&page=${page}&select=${select}`;
+    const url = `${API}/cards?q=set.id:${encodeURIComponent(setId)}&pageSize=250&page=${page}&select=${SELECT}`;
     const res = await fetch(url);
     if (!res.ok) throw new Error(`API Pokémon TCG : erreur ${res.status}`);
     const json = (await res.json()) as { data: ApiCard[]; totalCount: number };
@@ -153,6 +204,16 @@ export function loadSet(setId: string): Promise<SetInfo> {
 /** Retrouve une carte déjà chargée (pour la galerie). */
 export function cachedSet(setId: string): SetInfo | null {
   return readCache(setId);
+}
+
+/** Version complète (avec stats de combat) d'une carte d'un set déjà chargé. */
+export async function fullCard(card: Card): Promise<Card> {
+  if (card.hp !== undefined || card.supertype !== 'Pokémon') return card;
+  try {
+    return (await loadSet(card.setId)).cards.find((c) => c.id === card.id) ?? card;
+  } catch {
+    return card;
+  }
 }
 
 export function setLogoUrl(setId: string): string {

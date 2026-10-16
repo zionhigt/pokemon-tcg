@@ -4,6 +4,7 @@ import { loadManifest } from './assets';
 import { getCardLang, loadFrench, setCardLang, type CardLang } from './cardLang';
 import { BOOSTERS } from './data/boosters';
 import { credits, h, toast } from './dom';
+import { arenaPage } from './pages/arena';
 import { galleryPage } from './pages/gallery';
 import { openPage } from './pages/open';
 import { shopPage } from './pages/shop';
@@ -16,6 +17,7 @@ const PAGES: Record<string, { label: string; icon: string; render: (root: HTMLEl
   boutique: { label: 'Boutique', icon: '🛒', render: shopPage },
   ouverture: { label: 'Ouverture', icon: '✨', render: openPage },
   galerie: { label: 'Galerie', icon: '🗂️', render: galleryPage },
+  arenes: { label: 'Arènes', icon: '🏆', render: arenaPage },
 };
 
 const app = document.querySelector<HTMLDivElement>('#app')!;
