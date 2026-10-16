@@ -2,6 +2,8 @@ name: Release
 
 # Publier une version :  npm version patch|minor|major  puis  git push --follow-tags
 # Le tag vX.Y.Z déclenche : build → release GitHub (zip) → déploiement GitHub Pages.
+# Sans terminal (ex. depuis le téléphone) : Actions → Release → « Run workflow » sur master
+# crée le tag v<version de package.json> et la release.
 on:
   push:
     tags: ['v*']
@@ -27,13 +29,14 @@ jobs:
           cache: npm
       - run: npm ci
 
-      - name: Vérifier que le tag correspond à package.json
-        if: startsWith(github.ref, 'refs/tags/v')
+      - name: Version
+        id: version
         run: |
           PKG="v$(node -p "require('./package.json').version")"
-          if [ "$PKG" != "${GITHUB_REF_NAME}" ]; then
+          if [[ "$GITHUB_REF" == refs/tags/v* && "$PKG" != "$GITHUB_REF_NAME" ]]; then
             echo "::error::Tag ${GITHUB_REF_NAME} ≠ version package.json ($PKG)"; exit 1
           fi
+          echo "tag=$PKG" >> "$GITHUB_OUTPUT"
 
       # Cache des assets entre les releases : le script ne télécharge que ce qui manque
       - uses: actions/cache@v4
@@ -48,13 +51,16 @@ jobs:
           BASE_PATH: /${{ github.event.repository.name }}/
 
       - name: Archive
-        run: cd dist && zip -r ../pokemon-tcg-${GITHUB_REF_NAME}.zip .
+        run: cd dist && zip -r ../pokemon-tcg-${{ steps.version.outputs.tag }}.zip .
 
+      # Lancement manuel : la release (et son tag) n'est créée que depuis master
       - name: Release GitHub
-        if: startsWith(github.ref, 'refs/tags/v')
+        if: startsWith(github.ref, 'refs/tags/v') || github.ref == 'refs/heads/master'
         uses: softprops/action-gh-release@v2
         with:
-          files: pokemon-tcg-${{ github.ref_name }}.zip
+          tag_name: ${{ steps.version.outputs.tag }}
+          target_commitish: ${{ github.sha }}
+          files: pokemon-tcg-${{ steps.version.outputs.tag }}.zip
           generate_release_notes: true
 
       - uses: actions/upload-pages-artifact@v3
