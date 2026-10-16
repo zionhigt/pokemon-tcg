@@ -468,7 +468,7 @@ function battleView(page: HTMLElement, leader: Leader, isAlive: () => boolean): 
   const float = (s: SideId, text: string, kind: string) => {
     const host = field.querySelector(`.fighter.${s} .floats`);
     if (!host) return;
-    const el = h('span', { class: `float ${kind}` }, text);
+    const el = h('span', { class: `dmg-float ${kind}` }, text);
     host.append(el);
     setTimeout(() => el.remove(), 1200);
   };

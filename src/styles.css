@@ -1736,21 +1736,21 @@ select {
   display: grid;
   place-items: center;
 }
-.float {
+.dmg-float {
   position: absolute;
   font-weight: 900;
   font-size: 1.6rem;
   text-shadow: 0 2px 0 #000, 0 0 10px #000;
   animation: float-up 1.2s ease-out forwards;
 }
-.float.dmg {
+.dmg-float.dmg {
   color: #ff6b6b;
 }
-.float.big {
+.dmg-float.big {
   color: #ffd43b;
   font-size: 2.2rem;
 }
-.float.heal {
+.dmg-float.heal {
   color: var(--good);
 }
 @keyframes float-up {
