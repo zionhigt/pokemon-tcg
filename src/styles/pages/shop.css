@@ -1,0 +1,201 @@
+/* ---------- Shop ---------- */
+.shop-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(min(100%, 420px), 1fr));
+  gap: 16px;
+}
+.shop-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  gap: 16px;
+  padding: 16px;
+  border-radius: var(--radius);
+  background: linear-gradient(180deg, var(--panel), #1a1440);
+  border: 1px solid var(--line);
+}
+.shop-item .actions {
+  justify-content: center;
+}
+.shop-pack {
+  flex: none;
+  display: flex;
+  align-items: center;
+}
+.shop-info {
+  flex: 1;
+  min-width: 0;
+  width: 100%;
+}
+@media (min-width: 641px) {
+  /* Booster à gauche, infos à droite */
+  .shop-item {
+    flex-direction: row;
+    align-items: normal;
+    text-align: inherit;
+  }
+  .shop-item .actions {
+    justify-content: normal;
+  }
+  .shop-info {
+    width: auto;
+  }
+}
+.shop-info h2 {
+  font-size: 1.2rem;
+}
+.shop-info h3 {
+  font-size: 0.8rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--muted);
+  margin: 10px 0 6px;
+}
+.shop-info p {
+  margin: 0 0 4px;
+}
+.guarantee {
+  color: var(--good);
+  font-weight: 700;
+  font-size: 0.9rem;
+}
+.odds {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: 4px;
+}
+.odds li {
+  position: relative;
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.82rem;
+  padding: 3px 8px;
+  border-radius: 6px;
+  background: rgba(255, 255, 255, 0.04);
+  overflow: hidden;
+}
+.odds li i {
+  position: absolute;
+  inset: 0 auto 0 0;
+  background: var(--tc);
+  opacity: 0.25;
+}
+.odds li span,
+.odds li b {
+  position: relative;
+}
+
+.sell,
+.stats {
+  margin-top: 28px;
+  padding: 18px;
+  border-radius: var(--radius);
+  background: var(--panel);
+  border: 1px solid var(--line);
+}
+.sell-list {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(min(100%, 280px), 1fr));
+  gap: 8px;
+  margin-top: 14px;
+}
+.sell-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 8px;
+  border-radius: 12px;
+  background: rgba(255, 255, 255, 0.04);
+  border-left: 3px solid var(--tc);
+}
+.sell-row img {
+  width: 40px;
+  border-radius: 4px;
+}
+.sell-row > div {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+}
+.sell-row b {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.stats dl {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+  gap: 10px;
+  margin: 0;
+}
+.stats dt {
+  color: var(--muted);
+  font-size: 0.8rem;
+}
+.stats dd {
+  margin: 0 0 6px;
+  font-weight: 800;
+  font-size: 1.1rem;
+}
+
+/* ---------- Revente en masse ---------- */
+.sell .chip {
+  margin-top: 8px;
+}
+.bulk-row {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(min(100%, 150px), 1fr));
+  gap: 8px;
+  margin: 14px 0 20px;
+}
+.btn.bulk {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 2px;
+  white-space: normal;
+  text-align: left;
+}
+.btn.bulk small {
+  font-weight: 600;
+  opacity: 0.8;
+}
+.btn.tier-btn {
+  border-left: 4px solid var(--tc);
+}
+.sell h3 {
+  margin: 0 0 10px;
+}
+.sell-btns {
+  display: flex;
+  flex: none !important;
+  flex-direction: row !important;
+  gap: 6px;
+}
+.sell-list .more,
+.sell-list .empty {
+  grid-column: 1 / -1;
+}
+
+.sell-search {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+.sell-search input {
+  flex: 1 1 200px;
+}
+/* Sur petit écran, les boutons de vente passent sous le nom plutôt que de l'écraser */
+.sell-row {
+  flex-wrap: wrap;
+}
+.sell-row > div:not(.sell-btns) {
+  min-width: 130px;
+}
+.sell-btns {
+  margin-left: auto;
+}

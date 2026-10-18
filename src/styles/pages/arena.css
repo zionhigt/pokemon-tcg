@@ -1,0 +1,256 @@
+.type-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 2px;
+  padding: 1px 8px;
+  border-radius: 999px;
+  font-size: 0.75rem;
+  font-weight: 700;
+  vertical-align: middle;
+  background: color-mix(in srgb, var(--type) 30%, transparent);
+  border: 1px solid color-mix(in srgb, var(--type) 70%, transparent);
+  color: var(--text);
+}
+.section-title {
+  margin-top: 28px;
+}
+
+.badges {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 16px;
+}
+.badge-slot {
+  width: 38px;
+  height: 38px;
+  display: grid;
+  place-items: center;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.05);
+  border: 2px dashed var(--line);
+  filter: grayscale(1);
+  opacity: 0.45;
+  font-size: 1.1rem;
+}
+.badge-slot.won {
+  filter: none;
+  opacity: 1;
+  border: 2px solid var(--type);
+  background: radial-gradient(circle at 35% 30%, #fff8, var(--type));
+  box-shadow: 0 0 14px color-mix(in srgb, var(--type) 60%, transparent);
+}
+
+.team {
+  padding: 16px;
+  border-radius: var(--radius);
+  background: var(--panel);
+  border: 1px solid var(--line);
+}
+.team-slots {
+  --card-w: 100%;
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 6px;
+  margin-top: 12px;
+}
+.team-slot {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  padding: 6px;
+  border-radius: 14px;
+  background: rgba(255, 255, 255, 0.04);
+  min-width: 0;
+}
+.team-slot .btn.small {
+  padding: 4px 8px;
+  font-size: 0.72rem;
+}
+@media (min-width: 641px) {
+  .team-slots {
+    gap: 12px;
+  }
+  .team-slot {
+    padding: 10px;
+  }
+  .team-slot .btn.small {
+    padding: 6px 10px;
+    font-size: 0.82rem;
+  }
+}
+.team-slot .card {
+  max-width: 160px;
+  margin: 0 auto;
+}
+.team-slot .actions {
+  margin-top: 0;
+  justify-content: center;
+}
+.slot-name {
+  text-align: center;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.empty-slot {
+  align-items: center;
+  justify-content: center;
+  min-height: 180px;
+  border: 2px dashed var(--line);
+  color: var(--muted);
+  cursor: pointer;
+  font: inherit;
+}
+.empty-slot span {
+  font-size: 2.2rem;
+}
+.empty-slot:disabled {
+  opacity: 0.35;
+  cursor: default;
+}
+.stat-line {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: center;
+  gap: 4px 8px;
+  font-size: 0.8rem;
+}
+.energy-slots {
+  display: flex;
+  justify-content: center;
+  gap: 8px;
+}
+.energy-slot {
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  border: 2px dashed var(--line);
+  background: transparent;
+  color: var(--muted);
+  cursor: pointer;
+  font-size: 1rem;
+}
+.energy-slot.filled {
+  border: 2px solid var(--type);
+  background: color-mix(in srgb, var(--type) 35%, transparent);
+}
+
+.pick-grid {
+  --card-w: 100%;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(min(30%, 130px), 1fr));
+  gap: 12px;
+}
+.pick {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  padding: 6px;
+  border-radius: 12px;
+  border: 2px solid transparent;
+  background: rgba(255, 255, 255, 0.04);
+  color: inherit;
+  font: inherit;
+  font-size: 0.82rem;
+  cursor: pointer;
+  text-align: center;
+}
+.pick:hover,
+.pick.current {
+  border-color: var(--accent);
+}
+.pick b {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.energy-pick {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.leaders {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(min(100%, 480px), 1fr));
+  gap: 12px;
+}
+.leader {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 14px;
+  align-items: center;
+  padding: 14px;
+  border-radius: var(--radius);
+  background: linear-gradient(110deg, color-mix(in srgb, var(--type) 22%, var(--panel)), var(--panel) 55%);
+  border: 1px solid var(--line);
+}
+.leader.locked {
+  filter: grayscale(0.85);
+  opacity: 0.6;
+}
+.leader.beaten {
+  border-color: color-mix(in srgb, var(--type) 60%, transparent);
+}
+.leader-emblem {
+  flex: none;
+  width: 56px;
+  height: 56px;
+  display: grid;
+  place-items: center;
+  border-radius: 50%;
+  font-size: 1.6rem;
+  background: radial-gradient(circle at 35% 30%, #fff6, var(--type));
+}
+.leader-info {
+  flex: 1;
+  min-width: 0;
+}
+.leader-info h2 {
+  font-size: 1.1rem;
+  margin: 0;
+}
+.leader-info p {
+  margin: 2px 0;
+}
+.quote {
+  font-style: italic;
+  font-size: 0.85rem;
+}
+.leader-team {
+  display: flex;
+  gap: 4px;
+  margin: 6px 0;
+}
+.mini-foe img {
+  width: 38px;
+  border-radius: 3px;
+}
+/* Téléphone : le bouton Défier passe sous le champion, aligné à droite */
+.leader-action {
+  display: flex;
+  flex-direction: row;
+  width: 100%;
+  justify-content: flex-end;
+  align-items: center;
+  gap: 6px;
+}
+@media (min-width: 641px) {
+  .leader {
+    flex-wrap: nowrap;
+  }
+  .leader-action {
+    flex-direction: column;
+    width: auto;
+    justify-content: normal;
+    align-items: flex-end;
+  }
+}
+.won-tag {
+  color: var(--good);
+  font-weight: 700;
+  font-size: 0.8rem;
+}

@@ -1,0 +1,49 @@
+:root {
+  /* Couleurs */
+  --bg: #0f0b24;
+  --bg2: #1b1340;
+  --panel: #211a4a;
+  --panel2: #2b2360;
+  --line: rgba(255, 255, 255, 0.1);
+  --text: #f3f0ff;
+  --muted: #a99fd6;
+  --accent: #ffcb05;
+  --accent2: #3d7dca;
+  --good: #3ddc84;
+  --bad: #ff5a6e;
+
+  /* Paliers de rareté */
+  --t-common: #9aa0ad;
+  --t-uncommon: #46c27a;
+  --t-rare: #4aa3ff;
+  --t-holo: #b77bff;
+  --t-ultra: #ffc23d;
+  --t-secret: #ff5fd2;
+
+  /* Formes */
+  --radius: 16px;
+  --card-w: 140px;
+
+  /* Coque de l'app : marges latérales, encoches, barres fixes */
+  --gutter: 16px;
+  --content-max: 1120px;
+  --safe-top: env(safe-area-inset-top, 0px);
+  --safe-bottom: env(safe-area-inset-bottom, 0px);
+  /* Hauteur de la barre du haut, sous laquelle se collent les éléments sticky */
+  --topbar-h: 58px;
+  /* Barre d'onglets flottante : distance au bas de l'écran et place à lui réserver sous le contenu */
+  --tabbar-bottom: 12px;
+  --tabbar-space: 96px;
+
+  /* Empilement */
+  --z-sticky: 5;
+  --z-shell: 20;
+  --z-modal: 50;
+  --z-confirm: 60;
+  --z-banner: 90;
+  --z-toast: 100;
+
+  color-scheme: dark;
+  font-family: 'Segoe UI', system-ui, -apple-system, Roboto, sans-serif;
+  line-height: 1.45;
+}

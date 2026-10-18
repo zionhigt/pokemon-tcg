@@ -1,0 +1,113 @@
+/* ---------- Card ---------- */
+.card {
+  width: var(--card-w);
+  aspect-ratio: 63 / 88;
+  perspective: 900px;
+  position: relative;
+}
+.card-inner {
+  position: absolute;
+  inset: 0;
+  transform-style: preserve-3d;
+  transition: transform 0.6s cubic-bezier(0.3, 1.4, 0.5, 1);
+}
+.card.face-down .card-inner {
+  transform: rotateY(180deg);
+}
+.card-front,
+.card-back {
+  position: absolute;
+  inset: 0;
+  border-radius: 4.5% / 3.3%;
+  overflow: hidden;
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+}
+.card-front {
+  background: #2a2a3a;
+  transition: transform 0.15s ease-out;
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.45);
+}
+.card-front img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+.card-back {
+  transform: rotateY(180deg);
+  /* background:
+    repeating-radial-gradient(circle at 50% 50%, transparent 0 14px, rgba(255, 255, 255, 0.04) 14px 16px),
+    radial-gradient(ellipse at 50% 50%, #3d7dca 0%, #1d3fa0 60%, #0f2263 100%); */
+  background-image: url("../../images/back.png");
+  background-repeat: no-repeat;
+  background-size: cover;
+  box-shadow: inset 0 0 0 6px #1a3a94, 0 6px 16px rgba(0, 0, 0, 0.45);
+}
+.card-back::before {
+  /* pokéball centrale */
+  content: '';
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 46%;
+  aspect-ratio: 1;
+  translate: -50% -50%;
+  border-radius: 50%;
+  border: 3px solid #111;
+  background:
+    radial-gradient(circle, #f4f4f4 0 13%, #111 13% 20%, transparent 20%),
+    linear-gradient(180deg, #e3350d 0 45%, #111 45% 55%, #f4f4f4 55%);
+  box-shadow: 0 0 24px rgba(0, 0, 0, 0.4);
+}
+.card.shiny.tilting .card-front {
+  transform: rotateX(var(--rx, 0)) rotateY(var(--ry, 0)) scale(1.03);
+}
+.card-holo {
+  position: absolute;
+  inset: 0;
+  mix-blend-mode: color-dodge;
+  opacity: 0.28;
+  background: repeating-linear-gradient(
+    115deg,
+    #ff6b6b 0%,
+    #ffd93d 8%,
+    #6bff95 16%,
+    #6bc8ff 24%,
+    #c86bff 32%,
+    #ff6b6b 40%
+  );
+  background-size: 300% 300%;
+  background-position: var(--mx, 50%) var(--my, 50%);
+  animation: holo-idle 6s linear infinite;
+  pointer-events: none;
+}
+.card.tilting .card-holo {
+  animation: none;
+  opacity: 0.45;
+}
+@keyframes holo-idle {
+  50% {
+    background-position: 100% 100%;
+  }
+}
+.card-glare {
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  background: radial-gradient(circle at var(--mx, 50%) var(--my, 50%), rgba(255, 255, 255, 0.55), transparent 45%);
+  mix-blend-mode: overlay;
+  transition: opacity 0.2s;
+  pointer-events: none;
+}
+.card.tilting .card-glare {
+  opacity: 1;
+}
+.card.tier-ultra .card-front {
+  box-shadow: 0 0 0 2px rgba(255, 194, 61, 0.7), 0 0 22px rgba(255, 194, 61, 0.45);
+}
+.card.tier-secret .card-front {
+  box-shadow: 0 0 0 2px rgba(255, 95, 210, 0.8), 0 0 28px rgba(255, 95, 210, 0.55);
+}
+.card.tier-secret .card-holo {
+  opacity: 0.4;
+}

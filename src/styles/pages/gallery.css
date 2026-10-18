@@ -1,0 +1,147 @@
+/* ---------- Gallery ---------- */
+.gallery-summary {
+  display: grid;
+  gap: 14px;
+  margin-bottom: 16px;
+}
+.kpis {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 10px;
+}
+.kpis > div {
+  padding: 12px;
+  border-radius: 14px;
+  background: var(--panel);
+  border: 1px solid var(--line);
+  display: flex;
+  flex-direction: column;
+}
+.kpis b {
+  font-size: 1.05rem;
+}
+@media (min-width: 641px) {
+  .kpis b {
+    font-size: 1.3rem;
+  }
+}
+.kpis span {
+  color: var(--muted);
+  font-size: 0.8rem;
+}
+.sets {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(min(100%, 240px), 1fr));
+  gap: 6px 16px;
+}
+.set-progress {
+  display: grid;
+  grid-template-columns: 1fr 1fr auto;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.85rem;
+}
+.bar {
+  height: 8px;
+  border-radius: 4px;
+  background: rgba(255, 255, 255, 0.08);
+  overflow: hidden;
+}
+.bar i {
+  display: block;
+  height: 100%;
+  background: linear-gradient(90deg, var(--accent2), var(--accent));
+}
+.filters {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 16px;
+  position: sticky;
+  top: var(--topbar-h);
+  z-index: var(--z-sticky);
+  padding: 8px 0;
+  background: linear-gradient(var(--bg) 70%, transparent);
+}
+.filters input[type='search'] {
+  flex: 1 1 200px;
+}
+.gallery-grid {
+  --card-w: 100%;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(min(30%, 150px), 1fr));
+  gap: 14px;
+}
+.tile {
+  position: relative;
+  background: none;
+  border: 0;
+  padding: 0;
+  color: inherit;
+  font: inherit;
+  cursor: pointer;
+  text-align: left;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  transition: transform 0.15s;
+}
+.tile:hover {
+  transform: translateY(-3px);
+}
+.badge {
+  position: absolute;
+  top: 6px;
+  padding: 2px 8px;
+  border-radius: 999px;
+  font-weight: 800;
+  font-size: 0.78rem;
+  z-index: 2;
+}
+.badge.count {
+  right: 6px;
+  background: var(--accent);
+  color: #1b1340;
+}
+.badge.fav {
+  left: 6px;
+  background: #1b1340;
+  color: var(--accent);
+}
+.tile-meta {
+  display: flex;
+  justify-content: space-between;
+  gap: 6px;
+  font-size: 0.8rem;
+}
+.tile-name {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.tile-value {
+  color: var(--accent);
+  font-weight: 700;
+  white-space: nowrap;
+}
+
+.modal-card {
+  --card-w: min(300px, 70vw);
+  flex: none;
+}
+.modal-info {
+  flex: 1;
+  min-width: 0;
+}
+.modal-info dl {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 4px 12px;
+  font-size: 0.9rem;
+}
+.modal-info dt {
+  color: var(--muted);
+}
+.modal-info dd {
+  margin: 0;
+}

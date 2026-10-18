@@ -1,0 +1,180 @@
+/* ---------- Booster pack ---------- */
+.pack {
+  --w: 200px;
+  width: var(--w);
+  aspect-ratio: 0.58;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  filter: drop-shadow(0 18px 24px rgba(0, 0, 0, 0.55));
+  user-select: none;
+  transition: transform 0.5s cubic-bezier(0.5, -0.4, 0.6, 1.4), opacity 0.5s;
+}
+.pack.small {
+  --w: 150px;
+}
+.pack.mini {
+  --w: 64px;
+  filter: drop-shadow(0 4px 6px rgba(0, 0, 0, 0.5));
+}
+.pack.big {
+  --w: min(62vw, 260px, calc((100dvh - 330px) * 0.58));
+}
+.pack-crimp {
+  height: 7%;
+  flex: none;
+  background: repeating-linear-gradient(90deg, #d9d9e3 0 3px, #9a9aae 3px 6px);
+  transition: transform 0.55s cubic-bezier(0.2, 0.8, 0.3, 1), opacity 0.55s;
+}
+.pack-crimp.top {
+  -webkit-mask: conic-gradient(from 135deg at top, #0000, #000 1deg 89deg, #0000 90deg) 50% / 10px 100%;
+  mask: conic-gradient(from 135deg at top, #0000, #000 1deg 89deg, #0000 90deg) 50% / 10px 100%;
+  border-radius: 0;
+}
+.pack-crimp.bottom {
+  -webkit-mask: conic-gradient(from -45deg at bottom, #0000, #000 1deg 89deg, #0000 90deg) 50% / 10px 100%;
+  mask: conic-gradient(from -45deg at bottom, #0000, #000 1deg 89deg, #0000 90deg) 50% / 10px 100%;
+}
+.pack-body {
+  flex: 1;
+  position: relative;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 8% 6% 6%;
+  background:
+    radial-gradient(circle at 50% 62%, color-mix(in srgb, var(--pc) 55%, transparent) 0 22%, transparent 48%),
+    linear-gradient(160deg, var(--pa) 0%, var(--pb) 100%);
+  border-left: 2px solid rgba(255, 255, 255, 0.18);
+  border-right: 2px solid rgba(0, 0, 0, 0.25);
+}
+.pack-body::before {
+  /* bandes de reflets "aluminium" */
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: repeating-linear-gradient(115deg, transparent 0 18px, rgba(255, 255, 255, 0.05) 18px 22px);
+  pointer-events: none;
+}
+.pack-shine {
+  position: absolute;
+  inset: -50%;
+  background: linear-gradient(105deg, transparent 40%, rgba(255, 255, 255, 0.35) 50%, transparent 60%);
+  animation: shine 4s ease-in-out infinite;
+  pointer-events: none;
+}
+@keyframes shine {
+  0%,
+  60% {
+    transform: translateX(-60%);
+  }
+  100% {
+    transform: translateX(60%);
+  }
+}
+.pack-brand {
+  position: relative;
+  font-weight: 900;
+  font-size: calc(var(--w) * 0.085);
+  letter-spacing: 0.08em;
+  color: var(--accent);
+  text-shadow: 0 2px 0 #1d3a8a, 0 0 6px rgba(0, 0, 0, 0.4);
+  text-align: center;
+  line-height: 1;
+}
+.pack-brand small {
+  display: block;
+  font-size: 0.38em;
+  letter-spacing: 0.18em;
+  color: #fff;
+  text-shadow: none;
+  margin-top: 3px;
+}
+.pack-logo {
+  position: relative;
+  width: 82%;
+  height: 22%;
+  object-fit: contain;
+  margin-top: 6%;
+  filter: drop-shadow(0 3px 4px rgba(0, 0, 0, 0.5));
+}
+.pack-mascot {
+  position: relative;
+  width: 84%;
+  flex: 1;
+  min-height: 0;
+  object-fit: contain;
+  filter: drop-shadow(0 6px 8px rgba(0, 0, 0, 0.45));
+}
+.pack-name {
+  position: relative;
+  font-weight: 800;
+  font-size: calc(var(--w) * 0.075);
+  text-align: center;
+  color: #fff;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.6);
+}
+.pack-count {
+  position: relative;
+  font-size: calc(var(--w) * 0.05);
+  color: rgba(255, 255, 255, 0.8);
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+}
+.pack.mini .pack-brand,
+.pack.mini .pack-name,
+.pack.mini .pack-count,
+.pack.mini .pack-logo {
+  display: none;
+}
+.pack.mini .pack-mascot {
+  width: 100%;
+}
+
+.pack.float {
+  animation: float 3.2s ease-in-out infinite;
+}
+@keyframes float {
+  50% {
+    transform: translateY(-8px) rotate(-1.5deg);
+  }
+}
+.pack.shake {
+  animation: shake 0.7s ease-in-out;
+}
+@keyframes shake {
+  0%,
+  100% {
+    transform: none;
+  }
+  15% {
+    transform: rotate(-6deg) scale(1.03);
+  }
+  30% {
+    transform: rotate(5deg) scale(1.05);
+  }
+  45% {
+    transform: rotate(-4deg) scale(1.06);
+  }
+  60% {
+    transform: rotate(3deg) scale(1.07);
+  }
+  80% {
+    transform: rotate(-1deg) scale(1.08);
+  }
+}
+.pack.torn {
+  transform: scale(1.08);
+}
+.pack.torn .pack-crimp.top {
+  transform: translate(60px, -90px) rotate(28deg);
+  opacity: 0;
+}
+.pack.torn .pack-body {
+  box-shadow: inset 0 18px 30px -10px rgba(255, 255, 255, 0.7);
+}
+.pack.drop {
+  transform: translateY(70%) scale(0.9);
+  opacity: 0;
+}

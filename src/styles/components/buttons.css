@@ -1,0 +1,80 @@
+/* ---------- Buttons & forms ---------- */
+.btn {
+  appearance: none;
+  border: 1px solid var(--line);
+  background: var(--panel2);
+  color: var(--text);
+  padding: 10px 16px;
+  border-radius: 12px;
+  font: inherit;
+  font-weight: 700;
+  cursor: pointer;
+  transition: transform 0.1s, background 0.2s, opacity 0.2s;
+  white-space: nowrap;
+}
+.btn:hover:not(:disabled) {
+  background: #3a3080;
+}
+.btn:active:not(:disabled) {
+  transform: scale(0.97);
+}
+.btn:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+.btn.primary {
+  background: linear-gradient(180deg, #ffd43b, #f0b400);
+  color: #231a00;
+  border-color: transparent;
+}
+.btn.primary:hover:not(:disabled) {
+  background: linear-gradient(180deg, #ffe066, #ffc107);
+}
+.btn.ghost {
+  background: transparent;
+}
+.btn.danger {
+  background: #5a1726;
+  border-color: #8a2a3d;
+}
+.btn.small {
+  padding: 6px 10px;
+  font-size: 0.82rem;
+  border-radius: 10px;
+}
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 12px;
+}
+.actions.center {
+  justify-content: center;
+}
+.actions.col {
+  flex-direction: column;
+  align-items: stretch;
+}
+
+input[type='search'],
+select {
+  font: inherit;
+  color: var(--text);
+  background: var(--panel);
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  padding: 9px 12px;
+  min-width: 0;
+}
+
+.chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 12px;
+  border-radius: 999px;
+  background: var(--panel);
+  border: 1px solid var(--line);
+  cursor: pointer;
+  user-select: none;
+}

@@ -1,0 +1,90 @@
+.modal {
+  position: fixed;
+  inset: 0;
+  z-index: var(--z-modal);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--gutter);
+  background: rgba(5, 3, 15, 0.78);
+  backdrop-filter: blur(6px);
+  animation: fade 0.2s;
+}
+@keyframes fade {
+  from {
+    opacity: 0;
+  }
+}
+
+.modal-box {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 24px;
+  max-width: 760px;
+  width: 100%;
+  max-height: 100%;
+  overflow: auto;
+  padding: 20px 16px;
+  border-radius: 20px;
+  background: var(--panel);
+  border: 1px solid var(--line);
+}
+@media (min-width: 641px) {
+  .modal-box {
+    flex-direction: row;
+    align-items: normal;
+    padding: 24px;
+  }
+}
+
+.modal-close {
+  position: absolute;
+  top: 8px;
+  right: 12px;
+  background: none;
+  border: 0;
+  color: var(--muted);
+  font-size: 1.8rem;
+  cursor: pointer;
+  line-height: 1;
+}
+
+/* ---------- Confirmation ---------- */
+.modal.confirm {
+  z-index: var(--z-confirm);
+}
+.confirm-box {
+  flex-direction: column;
+  gap: 10px;
+  max-width: 440px;
+}
+.confirm-box h2 {
+  margin: 0;
+  font-size: 1.2rem;
+}
+.confirm-box p {
+  margin: 0;
+}
+.confirm-box .actions {
+  justify-content: flex-end;
+}
+.confirm-box .warn {
+  padding: 8px 12px;
+  border-radius: 10px;
+  background: rgba(255, 90, 110, 0.12);
+  border: 1px solid rgba(255, 90, 110, 0.35);
+  font-size: 0.9rem;
+}
+.confirm-total {
+  font-size: 1.4rem;
+  font-weight: 800;
+  color: var(--accent);
+}
+
+.sheet-box {
+  flex-direction: column;
+  gap: 8px;
+  max-width: 900px;
+}

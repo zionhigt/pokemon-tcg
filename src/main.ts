@@ -1,4 +1,4 @@
-import './styles.css';
+import './styles/index.css';
 import { registerSW } from 'virtual:pwa-register';
 import { loadManifest } from './assets';
 import { getCardLang, loadFrench, setCardLang, type CardLang } from './cardLang';
