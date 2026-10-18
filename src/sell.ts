@@ -1,39 +1,40 @@
 import { cardName } from './cardLang';
-import { confirmDialog, credits, h, toast } from './dom';
+import { confirmSheet, credits, plural, toast } from './dom';
 import { sell, type OwnedCard, type SalePlan } from './state';
 
-function names(list: OwnedCard[], max = 4): string {
+function names(list: OwnedCard[], max = 3): string {
   const shown = list.slice(0, max).map((o) => cardName(o.card));
-  return list.length > max ? `${shown.join(', ')}… (+${list.length - max})` : shown.join(', ');
+  return list.length > max ? `${shown.join(', ')}…` : shown.join(', ');
+}
+
+/** Exécute la vente et l'annonce ; `undoable` propose « Annuler » dans le toast. */
+export function doSale(plan: SalePlan, undoable = false): void {
+  const r = sell(plan.sales);
+  toast(
+    `+${credits(r.gain)} · ${plural(r.count, 'carte')} vendue${r.count > 1 ? 's' : ''}`,
+    undoable ? { label: 'Annuler', fn: r.undo } : undefined,
+  );
 }
 
 /** Demande confirmation puis exécute la vente. Renvoie true si la vente a eu lieu. */
-export async function confirmSale(plan: SalePlan, title = 'Confirmer la vente'): Promise<boolean> {
+export async function confirmSale(plan: SalePlan, title = 'Confirmer la vente', body?: string): Promise<boolean> {
   if (!plan.count) {
-    toast('Rien à vendre', 'info');
+    toast('Rien à vendre');
     return false;
   }
-  const ok = await confirmDialog({
+  const warn = [
+    plan.lost.length ? `Tu n’auras plus aucun exemplaire de ${names(plan.lost)}.` : '',
+    plan.favorites.length ? `Favori${plan.favorites.length > 1 ? 's' : ''} inclus : ${names(plan.favorites)}.` : '',
+  ]
+    .filter(Boolean)
+    .join(' ');
+  const ok = await confirmSheet({
     title,
-    body: [
-      h('p', {}, `${plan.count} carte${plan.count > 1 ? 's' : ''}${plan.sales.length > 1 ? ` (${plan.sales.length} différentes)` : ''} pour`),
-      h('p', { class: 'confirm-total' }, credits(plan.gain)),
-      plan.lost.length
-        ? h(
-            'p',
-            { class: 'warn' },
-            plan.lost.length === 1
-              ? `Tu n'auras plus aucun exemplaire de ${cardName(plan.lost[0].card)}.`
-              : `${plan.lost.length} cartes quitteront ta collection : ${names(plan.lost)}.`,
-          )
-        : null,
-      plan.favorites.length ? h('p', { class: 'warn' }, `★ Favori${plan.favorites.length > 1 ? 's' : ''} inclus : ${names(plan.favorites)}.`) : null,
-    ],
-    confirm: `Vendre · ${credits(plan.gain)}`,
-    danger: plan.lost.length > 0 || plan.favorites.length > 0,
+    body: body ?? `${plural(plan.count, 'carte')}${plan.sales.length > 1 ? ` (${plan.sales.length} différentes)` : ''}.`,
+    amount: `+${credits(plan.gain)}`,
+    warn,
+    ok: `Vendre · ${credits(plan.gain)}`,
   });
-  if (!ok) return false;
-  const r = sell(plan.sales);
-  toast(`${r.count} carte${r.count > 1 ? 's' : ''} vendue${r.count > 1 ? 's' : ''} pour ${credits(r.gain)}`, 'good');
-  return true;
+  if (ok) doSale(plan);
+  return ok;
 }

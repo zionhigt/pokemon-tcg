@@ -1,49 +1,56 @@
 :root {
-  /* Couleurs */
-  --bg: #0f0b24;
-  --bg2: #1b1340;
-  --panel: #211a4a;
-  --panel2: #2b2360;
-  --line: rgba(255, 255, 255, 0.1);
-  --text: #f3f0ff;
-  --muted: #a99fd6;
+  /* Fond et surfaces */
+  --bg: #0d0b18;
+  --surface: #1f1a3d;
+  --surface-line: #2f2a4a;
+  --raised: #231e48;
+  --raised-line: #3a3466;
+  --sheet: #211c46;
+  --deep: #1a1636;
+
+  /* Texte */
+  --text: #ecebf5;
+  --soft: #c9c5e6;
+  --muted: #a39fbf;
+  --dim: #7d78a0;
+  --faint: #5d5880;
+
+  /* Accents */
   --accent: #ffcb05;
-  --accent2: #3d7dca;
-  --good: #3ddc84;
-  --bad: #ff5a6e;
+  --accent-ink: #1a1500;
+  --gold: linear-gradient(180deg, #ffd84a, #f5b800);
+  --gold-shadow: 0 6px 18px rgba(255, 203, 5, 0.25);
+  --good: #43d18d;
+  --good-text: #4ade80;
+  --bad: #ff5c7a;
+  --warn: #ff8a65;
 
   /* Paliers de rareté */
-  --t-common: #9aa0ad;
-  --t-uncommon: #46c27a;
-  --t-rare: #4aa3ff;
-  --t-holo: #b77bff;
-  --t-ultra: #ffc23d;
-  --t-secret: #ff5fd2;
+  --t-common: #c9c7d9;
+  --t-uncommon: #43d18d;
+  --t-rare: #7d96ff;
+  --t-holo: #b884ff;
+  --t-ultra: #d9a066;
+  --t-secret: #ff7ad9;
 
-  /* Formes */
-  --radius: 16px;
-  --card-w: 140px;
+  /* Typographies */
+  --f-display: 'Bricolage Grotesque', system-ui, sans-serif;
+  --f-body: 'IBM Plex Sans', system-ui, -apple-system, sans-serif;
+  --f-mono: 'IBM Plex Mono', ui-monospace, monospace;
 
-  /* Coque de l'app : marges latérales, encoches, barres fixes */
+  /* Coque : colonne mobile, encoches, barres */
   --gutter: 16px;
-  --content-max: 1120px;
+  --app-max: 480px;
   --safe-top: env(safe-area-inset-top, 0px);
   --safe-bottom: env(safe-area-inset-bottom, 0px);
-  /* Hauteur de la barre du haut, sous laquelle se collent les éléments sticky */
-  --topbar-h: 58px;
-  /* Barre d'onglets flottante : distance au bas de l'écran et place à lui réserver sous le contenu */
-  --tabbar-bottom: 12px;
-  --tabbar-space: 96px;
+  --ease: cubic-bezier(0.2, 0.8, 0.2, 1);
 
-  /* Empilement */
-  --z-sticky: 5;
-  --z-shell: 20;
-  --z-modal: 50;
-  --z-confirm: 60;
-  --z-banner: 90;
-  --z-toast: 100;
+  /* Empilement (les calques suivent l'ordre du DOM entre eux) */
+  --z-layer: 30;
+  --z-toast: 90;
+  --z-banner: 95;
 
   color-scheme: dark;
-  font-family: 'Segoe UI', system-ui, -apple-system, Roboto, sans-serif;
-  line-height: 1.45;
+  font-family: var(--f-body);
+  line-height: 1.4;
 }

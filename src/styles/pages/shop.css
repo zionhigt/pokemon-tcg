@@ -1,201 +1,214 @@
-/* ---------- Shop ---------- */
-.shop-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(min(100%, 420px), 1fr));
-  gap: 16px;
+/* ---------- Boutique : un set par écran ---------- */
+.boosters {
+  flex: 1;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
 }
-.shop-item {
+.carousel {
+  /* Le carrousel rétrécit sur les petits écrans pour que tout tienne sans défiler */
+  --ch: clamp(170px, calc(100dvh - 560px), 318px);
+  --pw: calc(var(--ch) * 0.553);
+  height: var(--ch);
+  flex: none;
+  margin: 0 calc(-1 * var(--gutter));
+  position: relative;
+  overflow: hidden;
+  touch-action: pan-y;
+}
+.car-rail {
+  height: 100%;
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+.car-item {
+  flex: 0 0 var(--pw);
+  cursor: pointer;
+  transform: scale(0.8);
+  opacity: 0.45;
+  transition: transform 0.4s var(--ease), opacity 0.4s;
+}
+.car-item.on {
+  transform: none;
+  opacity: 1;
+  cursor: default;
+}
+.car-item.on .car-float {
+  animation: floatY 4s ease-in-out infinite;
+}
+.set-info {
   display: flex;
   flex-direction: column;
   align-items: center;
+  gap: 6px;
   text-align: center;
-  gap: 16px;
-  padding: 16px;
-  border-radius: var(--radius);
-  background: linear-gradient(180deg, var(--panel), #1a1440);
-  border: 1px solid var(--line);
-}
-.shop-item .actions {
-  justify-content: center;
-}
-.shop-pack {
   flex: none;
-  display: flex;
-  align-items: center;
 }
-.shop-info {
-  flex: 1;
-  min-width: 0;
-  width: 100%;
+.set-name {
+  font: 800 25px/1 var(--f-display);
+  letter-spacing: -0.02em;
 }
-@media (min-width: 641px) {
-  /* Booster à gauche, infos à droite */
-  .shop-item {
-    flex-direction: row;
-    align-items: normal;
-    text-align: inherit;
-  }
-  .shop-item .actions {
-    justify-content: normal;
-  }
-  .shop-info {
-    width: auto;
-  }
-}
-.shop-info h2 {
-  font-size: 1.2rem;
-}
-.shop-info h3 {
-  font-size: 0.8rem;
-  text-transform: uppercase;
-  letter-spacing: 0.08em;
+.set-tag {
+  font: 400 14px/1.3 var(--f-body);
   color: var(--muted);
-  margin: 10px 0 6px;
 }
-.shop-info p {
-  margin: 0 0 4px;
+.set-meta {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  flex-wrap: wrap;
+  justify-content: center;
+  margin-top: 2px;
 }
-.guarantee {
-  color: var(--good);
-  font-weight: 700;
-  font-size: 0.9rem;
+.set-meta .good {
+  font: 700 13px/1 var(--f-body);
 }
-.odds {
-  list-style: none;
-  margin: 0;
-  padding: 0;
-  display: grid;
-  gap: 4px;
+.odds-card {
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+  flex: none;
+  padding: 12px 14px;
+  border-radius: 14px;
+  background: var(--surface);
+  box-shadow: inset 0 0 0 1px var(--surface-line);
 }
-.odds li {
-  position: relative;
+.odds-head {
   display: flex;
   justify-content: space-between;
-  font-size: 0.82rem;
-  padding: 3px 8px;
-  border-radius: 6px;
-  background: rgba(255, 255, 255, 0.04);
+  align-items: baseline;
+}
+.odds-head .mono {
+  font: 500 11px/1 var(--f-mono);
+  color: var(--dim);
+}
+.odds-bar {
+  display: flex;
+  height: 8px;
+  gap: 2px;
+  border-radius: 4px;
   overflow: hidden;
 }
-.odds li i {
-  position: absolute;
-  inset: 0 auto 0 0;
-  background: var(--tc);
-  opacity: 0.25;
+.odds-bar span {
+  min-width: 3px;
+  transition: flex 0.3s;
 }
-.odds li span,
-.odds li b {
-  position: relative;
+.odds-legend {
+  display: flex;
+  justify-content: space-between;
+  gap: 6px;
+  flex-wrap: wrap;
 }
-
-.sell,
-.stats {
-  margin-top: 28px;
-  padding: 18px;
-  border-radius: var(--radius);
-  background: var(--panel);
-  border: 1px solid var(--line);
-}
-.sell-list {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(min(100%, 280px), 1fr));
-  gap: 8px;
-  margin-top: 14px;
-}
-.sell-row {
+.odds-legend span {
   display: flex;
   align-items: center;
-  gap: 10px;
-  padding: 8px;
-  border-radius: 12px;
-  background: rgba(255, 255, 255, 0.04);
-  border-left: 3px solid var(--tc);
-}
-.sell-row img {
-  width: 40px;
-  border-radius: 4px;
-}
-.sell-row > div {
-  flex: 1;
-  min-width: 0;
-  display: flex;
-  flex-direction: column;
-}
-.sell-row b {
+  gap: 5px;
+  font: 600 11.5px/1 var(--f-body);
+  color: var(--soft);
   white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
 }
-.stats dl {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
-  gap: 10px;
-  margin: 0;
+.odds-legend i {
+  width: 7px;
+  height: 7px;
+  border-radius: 2px;
 }
-.stats dt {
-  color: var(--muted);
-  font-size: 0.8rem;
+.odds-legend b {
+  font: 600 11px/1 var(--f-mono);
+  color: var(--text);
 }
-.stats dd {
-  margin: 0 0 6px;
-  font-weight: 800;
-  font-size: 1.1rem;
+.buy-row {
+  display: flex;
+  gap: 8px;
+  margin-top: auto;
+  flex: none;
+}
+.buy-row .btn.grow {
+  font-size: 15px;
 }
 
-/* ---------- Revente en masse ---------- */
-.sell .chip {
-  margin-top: 8px;
+/* ---------- Revente ---------- */
+.sell-view {
+  flex: 1;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
 }
-.bulk-row {
+.toggle-row {
+  height: 52px;
+}
+.toggle-row > span:first-child {
+  flex: 1;
+  font: 600 14px/1.25 var(--f-body);
+}
+.sell-tiles {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(min(100%, 150px), 1fr));
-  gap: 8px;
-  margin: 14px 0 20px;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 10px;
+  flex: none;
 }
-.btn.bulk {
+.sell-tile {
+  height: 104px;
+  border: none;
+  border-radius: 18px;
+  cursor: pointer;
+  padding: 14px;
   display: flex;
   flex-direction: column;
   align-items: flex-start;
-  gap: 2px;
-  white-space: normal;
+  justify-content: space-between;
   text-align: left;
+  background: var(--surface);
+  box-shadow: inset 0 0 0 1px var(--surface-line);
+  color: var(--text);
 }
-.btn.bulk small {
-  font-weight: 600;
-  opacity: 0.8;
+.sell-tile:active {
+  transform: scale(0.98);
 }
-.btn.tier-btn {
-  border-left: 4px solid var(--tc);
+.sell-tile.hl {
+  background: linear-gradient(160deg, #3a2f7a, #241e4f);
+  box-shadow: inset 0 0 0 1.5px rgba(255, 203, 5, 0.5);
 }
-.sell h3 {
-  margin: 0 0 10px;
+.sell-tile.faded {
+  opacity: 0.55;
+  cursor: default;
 }
-.sell-btns {
+.st-head {
   display: flex;
-  flex: none !important;
-  flex-direction: row !important;
-  gap: 6px;
+  flex-direction: column;
+  gap: 5px;
 }
-.sell-list .more,
-.sell-list .empty {
-  grid-column: 1 / -1;
+.st-head b {
+  font: 700 15px/1.15 var(--f-body);
 }
-
-.sell-search {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 8px;
+.st-head .mono {
+  font-weight: 500;
 }
-.sell-search input {
-  flex: 1 1 200px;
+.st-amount {
+  font: 800 20px/1 var(--f-display);
+  color: var(--accent);
 }
-/* Sur petit écran, les boutons de vente passent sous le nom plutôt que de l'écraser */
-.sell-row {
-  flex-wrap: wrap;
+.st-amount.none {
+  color: var(--faint);
 }
-.sell-row > div:not(.sell-btns) {
-  min-width: 130px;
+.note {
+  margin: 0;
+  font: 500 12.5px/1.4 var(--f-body);
+  color: var(--muted);
+  flex: none;
+  text-wrap: pretty;
 }
-.sell-btns {
-  margin-left: auto;
+.unit-row {
+  height: 56px;
+  padding: 0 16px;
+  background: var(--raised);
+  box-shadow: inset 0 0 0 1px var(--raised-line);
+}
+.unit-row b {
+  font: 700 14.5px/1 var(--f-body);
+}
+.unit-row .muted {
+  font: 400 12.5px/1 var(--f-body);
 }

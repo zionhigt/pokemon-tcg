@@ -1,0 +1,101 @@
+/* ---------- Fiche carte ---------- */
+.layer.detail {
+  background: rgba(10, 8, 22, 0.9);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+}
+.dt-head {
+  height: 48px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex: none;
+}
+.dt-head .mono {
+  font-size: 13px;
+}
+.dt-stage {
+  flex: 1;
+  min-height: 0;
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.nav-arrow {
+  position: absolute;
+  top: 50%;
+  margin-top: -22px;
+  z-index: 2;
+  width: 36px;
+  height: 44px;
+  border: none;
+  border-radius: 12px;
+  cursor: pointer;
+  background: rgba(35, 30, 72, 0.7);
+  color: var(--text);
+  font: 600 22px/1 sans-serif;
+  transition: opacity 0.2s;
+}
+.nav-arrow.left {
+  left: -4px;
+}
+.nav-arrow.right {
+  right: -4px;
+}
+.nav-arrow.faded {
+  opacity: 0.25;
+}
+.dt-card {
+  width: min(268px, 68vw, calc((100dvh - 390px) * 0.716));
+  cursor: pointer;
+  touch-action: pan-y;
+  animation: popIn 0.3s ease-out;
+}
+.dt-card .card-inner {
+  transition: transform 0.6s cubic-bezier(0.3, 0.7, 0.2, 1);
+}
+.dt-info {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 9px;
+  text-align: center;
+  flex: none;
+}
+.dt-name {
+  font: 800 26px/1 var(--f-display);
+  letter-spacing: -0.02em;
+}
+.dt-line {
+  font: 500 12.5px/1.35 var(--f-mono);
+  color: var(--muted);
+  text-wrap: balance;
+}
+.dt-rarity {
+  font: 500 12px/1 var(--f-body);
+  color: var(--dim);
+}
+.dt-actions {
+  display: flex;
+  gap: 8px;
+  flex: none;
+}
+.dt-actions .btn {
+  height: 58px;
+  flex-direction: column;
+  gap: 5px;
+}
+.dt-actions small {
+  font: 600 12px/1 var(--f-mono);
+  opacity: 0.8;
+}
+.sell-btn {
+  background: #4a1626;
+  box-shadow: inset 0 0 0 1px #8c2a44;
+  color: #ffd6de;
+  font: 700 15px/1 var(--f-body);
+}
+.dt-actions .btn.primary b {
+  font: 800 15px/1 var(--f-display);
+}

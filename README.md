@@ -2,17 +2,23 @@
 
 Jeu solo d'ouverture de boosters Pokémon, en **TypeScript + Vite**, installable en **PWA**.
 
-- **Boutique** : achète des boosters (5 extensions, prix et chances de rare différents) et revends tes cartes :
-  en masse (doublons, par rareté, toute la collection) ou à l'unité, toujours avec confirmation.
-- **Ouverture** : déchire le booster, révèle les cartes une à une (effet holo, aura quand une ultra/secrète arrive).
-- **Cartes en français ou en anglais** : réglage FR / EN en bas de page (noms, images, rareté, extension).
+Interface pensée pour le téléphone : chaque écran tient dans l'écran, on pagine au glisser
+et les actions restent sous le pouce (barre d'onglets ancrée en bas).
+
+- **Boutique** : un booster par écran (5 extensions, prix et chances de rare différents), achat ×1 / ×5.
+  L'onglet **Revendre** vend en masse (doublons, par rareté), toujours avec confirmation.
+- **Ouverture** : les boosters scellés vivent dans l'en-tête, on les ouvre depuis n'importe quel écran.
+  Glisse le long du haut pour déchirer, puis révèle les cartes une à une (effet holo, halo pour les rares) ou « Tout révéler ».
+- **Collection** : sélecteur d'extension avec progression, filtres en un tap (type, favoris, doublons),
+  grille 3×3 paginée ; le tri (rareté, PV, puissance, valeur, numéro) s'affiche sur la carte.
+  Appui long sur une carte = sélection multiple pour vendre à l'unité ; la fiche carte se feuillette au glisser.
 - **Arènes** : mode histoire, 8 champions de Kanto à battre dans l'ordre avec une équipe de 3 Pokémon (voir plus bas).
-- **Galerie** : collection filtrable (extension, rareté, doublons, favoris), progression par set, revente à l'unité.
+- **Partie** (touche le compteur de ₽) : statistiques, cartes en français ou en anglais, réinitialisation.
 
 Tu commences avec **500 ₽**. Chaque booster rapporte **toujours plus que son prix** à la revente :
 le pire tirage possible (6 communes, 3 peu communes, 1 rare) vaut 108 % du prix du booster.
 Pour en profiter il faut revendre aussi ses exemplaires uniques : décoche « Garder 1 exemplaire »
-dans la boutique. Les favoris (★) ne partent jamais dans une vente en masse.
+dans l'onglet Revendre. Les favoris (♥), ton équipe d'arène et ses Énergies ne partent jamais dans une vente en masse.
 
 ## Arènes (mode histoire)
 
@@ -87,11 +93,14 @@ src/
   api.ts             client pokemontcg.io + cache
   assets.ts          résolution des assets locaux (manifeste)
   cardLang.ts        langue des cartes (FR via TCGdex / EN)
+  shell.ts           en-tête, barre d'onglets, animations de la coque
+  dom.ts             calques, feuilles du bas, toast, pagination au glisser
+  arenaData.ts       cartes de combat, équipes des champions, avantages de type
   sell.ts            confirmation des ventes
   data/boosters.ts   définition des boosters (set, prix, couleurs, chances)
   gacha.ts           tirage du contenu d'un booster
   rarity.ts          paliers de rareté et valeurs de revente
   state.ts           crédits, inventaire, collection (sauvegarde locale)
   components/        emballage de booster, carte holo
-  pages/             boutique, ouverture, galerie
+  pages/             boutique, collection, arènes ; calques ouverture, fiche carte, équipe, combat
 ```

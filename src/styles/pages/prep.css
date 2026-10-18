@@ -1,0 +1,239 @@
+/* ---------- Préparation de l'équipe ---------- */
+.layer.prep {
+  gap: 10px;
+  background: linear-gradient(180deg, #2a2263 0%, #17133a 40%, #0d0b1c 100%);
+  animation: slideInR 0.32s var(--ease);
+}
+.prep-head {
+  height: 48px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex: none;
+}
+.prep-head .round-btn {
+  width: 42px;
+  height: 42px;
+  font: 600 22px/1 sans-serif;
+  background: var(--raised);
+}
+.prep-head .col {
+  gap: 4px;
+}
+.prep-title {
+  font: 800 21px/1 var(--f-display);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.prep-body {
+  flex: 1;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.tip {
+  padding: 10px 12px;
+  border-radius: 14px;
+  background: rgba(67, 209, 141, 0.1);
+  box-shadow: inset 0 0 0 1px rgba(67, 209, 141, 0.3);
+  font: 500 13px/1.4 var(--f-body);
+  color: #d9f7e8;
+  flex: none;
+  text-wrap: pretty;
+}
+.tip b {
+  color: #fff;
+}
+.slots {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 10px;
+  flex: none;
+}
+.slot {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 7px;
+}
+.slot-face {
+  position: relative;
+  width: min(94px, 100%, calc((100dvh - 560px) * 0.716));
+  min-width: 56px;
+  aspect-ratio: 63 / 88;
+  border-radius: 7px;
+  cursor: pointer;
+  transition: box-shadow 0.2s;
+}
+.slot-face.sel {
+  box-shadow: 0 0 0 3px #17133a, 0 0 0 5px var(--accent);
+}
+.slot-empty {
+  position: absolute;
+  inset: 0;
+  border-radius: 7px;
+  border: 2px dashed #4a4380;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  color: var(--muted);
+  background: rgba(255, 255, 255, 0.02);
+}
+.slot-empty span {
+  font: 300 32px/1 sans-serif;
+}
+.slot-empty small {
+  font: 600 10.5px/1 var(--f-mono);
+}
+.slot-rm {
+  position: absolute;
+  top: -9px;
+  right: -9px;
+  z-index: 3;
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  border: 2px solid #17133a;
+  background: var(--bad);
+  color: #fff;
+  font: 700 14px/1 sans-serif;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+}
+.slot .mono {
+  white-space: nowrap;
+  font-size: 11px;
+}
+.socks {
+  display: flex;
+  gap: 8px;
+}
+.sock {
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  border: none;
+  padding: 0;
+  cursor: pointer;
+  overflow: hidden;
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font: 400 18px/1 sans-serif;
+  color: var(--dim);
+}
+.sock.empty {
+  background: #1a163a;
+  box-shadow: inset 0 0 0 1.5px #4a4380;
+}
+.sock.ok {
+  box-shadow: 0 0 0 2.5px var(--good);
+}
+.sock.bad {
+  box-shadow: 0 0 0 2.5px var(--warn);
+}
+.sock.faded {
+  opacity: 0.3;
+}
+/* Pastille d'Énergie : l'image de la carte recadrée sur son symbole */
+.en-token {
+  position: relative;
+  display: block;
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  overflow: hidden;
+  background: var(--type);
+}
+.en-token img {
+  position: absolute;
+  width: 150%;
+  max-width: none;
+  left: -25%;
+  top: -46%;
+}
+.mismatch {
+  font: 500 12px/1.35 var(--f-body);
+  color: var(--warn);
+  text-align: center;
+  flex: none;
+}
+.pick-head {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex: none;
+  margin-top: 2px;
+}
+.pick-title {
+  font: 700 14px/1.2 var(--f-body);
+}
+.pick-pages {
+  flex: 1;
+  min-height: 0;
+}
+.pick-page {
+  flex: 0 0 100%;
+  height: 100%;
+  padding: 4px var(--gutter);
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  grid-template-rows: repeat(2, minmax(0, 1fr));
+  gap: 10px 8px;
+}
+.pick-cell {
+  min-width: 0;
+  min-height: 0;
+  padding: 0;
+  border: none;
+  background: none;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 9px;
+  cursor: pointer;
+  color: var(--soft);
+}
+.fit-wrap {
+  min-height: 0;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+}
+.pick-cell .mono {
+  font-size: 10.5px;
+  white-space: nowrap;
+}
+
+/* Feuille Énergie */
+.en-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 14px 10px;
+}
+.en-opt {
+  border: none;
+  background: none;
+  padding: 0;
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  color: var(--text);
+}
+.en-card {
+  width: min(86px, 100%);
+  border-radius: 6px;
+}
+.en-opt.on .en-card {
+  box-shadow: 0 0 0 3px var(--accent);
+}

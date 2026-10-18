@@ -1,9 +1,10 @@
 /* ---------- Card ---------- */
 .card {
-  width: var(--card-w);
+  width: 100%;
   aspect-ratio: 63 / 88;
   perspective: 900px;
   position: relative;
+  container-type: inline-size;
 }
 .card-inner {
   position: absolute;
@@ -18,20 +19,38 @@
 .card-back {
   position: absolute;
   inset: 0;
-  border-radius: 4.5% / 3.3%;
+  border-radius: 4.6cqw;
   overflow: hidden;
   backface-visibility: hidden;
   -webkit-backface-visibility: hidden;
 }
 .card-front {
-  background: #2a2a3a;
-  transition: transform 0.15s ease-out;
-  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.45);
+  background: linear-gradient(160deg, var(--type, #8a84b8), #1f1a3d);
+  transition: transform 0.15s ease-out, filter 0.25s, box-shadow 0.2s;
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.4);
 }
 .card-front img {
+  position: absolute;
+  inset: 0;
   width: 100%;
   height: 100%;
   object-fit: cover;
+  pointer-events: none;
+}
+/* Nom affiché tant que l'image n'est pas chargée */
+.card-fallback {
+  position: absolute;
+  left: 8cqw;
+  right: 8cqw;
+  top: 9cqw;
+  font: 700 9cqw/1.1 var(--f-display);
+  color: rgba(255, 255, 255, 0.75);
+}
+.card.dim .card-front {
+  filter: grayscale(1) brightness(0.5);
+}
+.card.selected .card-front {
+  box-shadow: 0 0 0 3px var(--accent), 0 8px 20px rgba(0, 0, 0, 0.45);
 }
 .card-back {
   transform: rotateY(180deg);
@@ -59,7 +78,7 @@
     linear-gradient(180deg, #e3350d 0 45%, #111 45% 55%, #f4f4f4 55%);
   box-shadow: 0 0 24px rgba(0, 0, 0, 0.4);
 }
-.card.shiny.tilting .card-front {
+.card.tilting .card-front {
   transform: rotateX(var(--rx, 0)) rotateY(var(--ry, 0)) scale(1.03);
 }
 .card-holo {
@@ -110,4 +129,89 @@
 }
 .card.tier-secret .card-holo {
   opacity: 0.4;
+}
+
+/* ---------- Pastilles posées sur la carte ---------- */
+.cb {
+  position: absolute;
+  z-index: 2;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.4);
+  pointer-events: none;
+  white-space: nowrap;
+}
+.cb-count {
+  top: -2.5cqw;
+  right: -2.5cqw;
+  min-width: max(20px, 14cqw);
+  height: max(20px, 14cqw);
+  padding: 0 max(5px, 3cqw);
+  border-radius: 99px;
+  background: var(--accent);
+  color: var(--accent-ink);
+  font: 700 max(11px, 7cqw)/1 var(--f-mono);
+}
+.cb-fav {
+  top: -2.5cqw;
+  left: -2.5cqw;
+  width: max(20px, 14cqw);
+  height: max(20px, 14cqw);
+  border-radius: 50%;
+  background: var(--bad);
+  color: #fff;
+  font: 700 max(11px, 7.5cqw)/1 sans-serif;
+}
+.cb-new,
+.cb-tag {
+  bottom: -2cqw;
+  left: 50%;
+  transform: translateX(-50%);
+  padding: max(3px, 1.6cqw) max(6px, 3.6cqw);
+  border-radius: 99px;
+  font: 700 max(9px, 5.6cqw)/1 var(--f-mono);
+  color: #100d22;
+}
+.cb-new {
+  background: var(--good);
+  color: #06291a;
+  letter-spacing: 0.08em;
+}
+.cb-metric {
+  left: 4cqw;
+  bottom: 4cqw;
+  padding: max(3px, 1.8cqw) max(5px, 3.2cqw);
+  border-radius: max(5px, 3cqw);
+  background: rgba(14, 11, 30, 0.86);
+  color: var(--accent);
+  font: 600 max(10px, 6.4cqw)/1 var(--f-mono);
+  box-shadow: 0 0 0 1px rgba(255, 203, 5, 0.35);
+}
+.cb-check {
+  top: 4cqw;
+  right: 4cqw;
+  width: max(22px, 15cqw);
+  height: max(22px, 15cqw);
+  border-radius: 50%;
+  background: rgba(15, 12, 30, 0.55);
+  box-shadow: inset 0 0 0 2px rgba(255, 255, 255, 0.85);
+  color: var(--accent-ink);
+  font: 800 max(12px, 8cqw)/1 sans-serif;
+}
+.cb-check.on {
+  background: var(--accent);
+  box-shadow: none;
+}
+.card.face-down .cb {
+  display: none;
+}
+
+/* Carte qui remplit la hauteur de sa case sans déborder en largeur */
+.fit-card {
+  height: 100%;
+  aspect-ratio: 63 / 88;
+  max-width: 100%;
+  display: flex;
+  align-items: center;
 }
