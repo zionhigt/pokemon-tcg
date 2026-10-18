@@ -45,6 +45,8 @@ export interface GameState {
   /** Équipe de combat (jusqu'à 3 Pokémon) */
   team: TeamSlot[];
   arena: ArenaProgress;
+  /** Cartes obtenues pour la première fois et pas encore regardées (badge NEW) */
+  fresh: Record<string, true>;
 }
 
 function fresh(): GameState {
@@ -55,6 +57,7 @@ function fresh(): GameState {
     stats: { opened: 0, bought: 0, sold: 0, earned: 0, spent: 0 },
     team: [],
     arena: { badges: [], wins: 0, losses: 0 },
+    fresh: {},
   };
 }
 
@@ -127,6 +130,7 @@ export function openPack(boosterId: string, cards: Card[]): number[] {
       owned.value = Math.max(owned.value, value);
     } else {
       state.collection[card.id] = { card, count: 1, value, favorite: false, firstAt: now, lastAt: now };
+      state.fresh[card.id] = true;
     }
     return value;
   });
@@ -172,15 +176,29 @@ export function planSale(sales: Sale[]): SalePlan {
  * `keepOne` conserve un exemplaire de chaque carte (= vendre les doublons).
  */
 export function planBulk(filter: (o: OwnedCard) => boolean, keepOne: boolean): SalePlan {
+  const prot = protectedCounts();
   return planSale(
     Object.values(state.collection)
       .filter((o) => !o.favorite && filter(o))
-      .map((o) => ({ id: o.card.id, qty: keepOne ? o.count - 1 : o.count })),
+      .map((o) => ({ id: o.card.id, qty: o.count - Math.max(keepOne ? 1 : 0, prot[o.card.id] ?? 0) }))
+      .filter((s) => s.qty > 0),
   );
 }
 
-export function sell(sales: Sale[]): { count: number; gain: number } {
+/** Exemplaires réservés par l'équipe d'arène (Pokémon et Énergies) : jamais vendus en masse. */
+export function protectedCounts(): Record<string, number> {
+  const p: Record<string, number> = {};
+  for (const t of state.team) {
+    p[t.cardId] = (p[t.cardId] ?? 0) + 1;
+    for (const e of t.energies) p[e] = (p[e] ?? 0) + 1;
+  }
+  return p;
+}
+
+/** Exécute une vente ; `undo` la défait tant que rien d'autre n'a changé ces cartes. */
+export function sell(sales: Sale[]): { count: number; gain: number; undo: () => void } {
   const { count, gain } = planSale(sales);
+  const before = sales.map(({ id }) => [id, state.collection[id] && { ...state.collection[id] }] as const);
   for (const { id, qty } of sales) {
     const owned = state.collection[id];
     if (!owned) continue;
@@ -191,7 +209,23 @@ export function sell(sales: Sale[]): { count: number; gain: number } {
   state.stats.sold += count;
   state.stats.earned += gain;
   commit();
-  return { count, gain };
+  let undone = false;
+  const undo = () => {
+    if (undone) return;
+    undone = true;
+    for (const [id, o] of before) if (o) state.collection[id] = o;
+    state.credits -= gain;
+    state.stats.sold -= count;
+    state.stats.earned -= gain;
+    commit();
+  };
+  return { count, gain, undo };
+}
+
+export function markSeen(cardId: string): void {
+  if (!state.fresh[cardId]) return;
+  delete state.fresh[cardId];
+  commit();
 }
 
 export function toggleFavorite(cardId: string): void {
@@ -251,8 +285,20 @@ export function sanitizeTeam(): void {
 
 export function setTeamSlot(index: number, cardId: string | null): void {
   if (cardId === null) state.team.splice(index, 1);
-  else if (state.team[index]) state.team[index] = { cardId, energies: state.team[index].energies };
-  else state.team.push({ cardId, energies: [] });
+  else {
+    const j = state.team.findIndex((t) => t.cardId === cardId);
+    if (j === index) return;
+    // Déjà dans l'équipe : on échange les deux places (avec leurs Énergies)
+    if (j >= 0 && state.team[index]) [state.team[index], state.team[j]] = [state.team[j], state.team[index]];
+    else if (j >= 0) return;
+    else if (state.team[index]) state.team[index] = { cardId, energies: [] };
+    else state.team.push({ cardId, energies: [] });
+  }
+  commit();
+}
+
+export function setTeam(team: TeamSlot[]): void {
+  state.team = team;
   commit();
 }
 

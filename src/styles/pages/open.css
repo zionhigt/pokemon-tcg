@@ -1,0 +1,232 @@
+/* ---------- Ouverture d'un booster ---------- */
+.layer.opening {
+  align-items: center;
+  gap: 14px;
+  background: radial-gradient(120% 70% at 50% 42%, oklch(0.38 0.13 var(--hue, 255)) 0%, #120f26 58%, #0a0816 100%);
+  animation: fadeIn 0.25s;
+}
+.op-head {
+  height: 48px;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex: none;
+}
+.op-titles {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+}
+.op-title {
+  font: 800 18px/1 var(--f-display);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 100%;
+}
+.op-sub {
+  font: 500 12px/1 var(--f-mono);
+  color: var(--muted);
+}
+.op-right {
+  min-width: 44px;
+  display: flex;
+  justify-content: flex-end;
+}
+.op-stage {
+  flex: 1;
+  min-height: 0;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+}
+.op-center {
+  flex: 1;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 22px;
+}
+.op-hint {
+  font: 500 14px/1.4 var(--f-body);
+  color: var(--soft);
+  text-align: center;
+  max-width: 260px;
+}
+
+/* Choix du booster quand il y en a de plusieurs sortes */
+.op-picks {
+  display: flex;
+  gap: 10px;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+.op-pick {
+  width: 48px;
+  padding: 6px;
+  border-radius: 12px;
+  border: none;
+  cursor: pointer;
+  position: relative;
+  background: rgba(35, 30, 72, 0.8);
+  box-shadow: inset 0 0 0 1px var(--raised-line);
+}
+.op-pick.on {
+  box-shadow: inset 0 0 0 2px var(--accent);
+}
+.op-pick > span {
+  position: absolute;
+  right: -6px;
+  bottom: -6px;
+  padding: 3px 6px;
+  border-radius: 99px;
+  background: var(--accent);
+  color: var(--accent-ink);
+  font: 700 10.5px/1 var(--f-mono);
+}
+
+/* Booster à déchirer */
+.op-pack {
+  width: min(220px, 56vw, calc((100dvh - 300px) * 0.6));
+  cursor: grab;
+  touch-action: none;
+  transition: transform 0.5s cubic-bezier(0.3, 0.7, 0.2, 1) 0.2s, opacity 0.5s 0.2s;
+}
+.op-pack.enter {
+  animation: packIn 0.6s cubic-bezier(0.2, 0.9, 0.25, 1.15) both;
+}
+@keyframes packIn {
+  from {
+    opacity: 0;
+    transform: translateY(70px) scale(0.8) rotate(-4deg);
+  }
+}
+.op-float {
+  animation: floatY 3.6s ease-in-out infinite;
+}
+.op-pack.tearing {
+  transition: none;
+}
+.op-pack.tearing .op-float {
+  animation: none;
+}
+.op-pack.gone {
+  transform: translateY(60px) scale(0.92) !important;
+  opacity: 0;
+  transition: transform 0.5s cubic-bezier(0.3, 0.7, 0.2, 1) 0.2s, opacity 0.5s 0.2s;
+}
+
+/* Pile de cartes : la première est au-dessus */
+.op-stackwrap {
+  position: relative;
+  width: min(250px, 64vw, calc((100dvh - 330px) * 0.716));
+  aspect-ratio: 250 / 349;
+  cursor: pointer;
+}
+.stack-card {
+  position: absolute;
+  inset: 0;
+  transition: transform 0.45s cubic-bezier(0.3, 0.7, 0.2, 1), opacity 0.45s;
+}
+.stack-card .card-inner {
+  transition: transform 0.55s cubic-bezier(0.3, 0.7, 0.2, 1);
+}
+.op-glow {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 208%;
+  aspect-ratio: 1;
+  translate: -50% -50%;
+  border-radius: 50%;
+  opacity: 0;
+  transition: opacity 0.45s;
+  animation: spin 9s linear infinite;
+  pointer-events: none;
+}
+.op-glow.on {
+  opacity: 1;
+}
+.op-glow.g-blue {
+  background: repeating-conic-gradient(from 0deg, rgba(125, 150, 255, 0) 0deg 9deg, rgba(125, 150, 255, 0.28) 11deg 15deg, rgba(125, 150, 255, 0) 17deg 24deg);
+}
+.op-glow.g-gold {
+  background: repeating-conic-gradient(from 0deg, rgba(255, 203, 5, 0) 0deg 8deg, rgba(255, 203, 5, 0.32) 10deg 14deg, rgba(184, 132, 255, 0) 16deg 22deg);
+}
+.op-glow.g-secret {
+  background: repeating-conic-gradient(from 0deg, rgba(255, 122, 217, 0) 0deg 8deg, rgba(255, 122, 217, 0.38) 10deg 14deg, rgba(255, 203, 5, 0.2) 16deg 18deg, rgba(255, 122, 217, 0) 20deg 24deg);
+}
+.op-info {
+  min-height: 84px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  text-align: center;
+}
+.op-name {
+  font: 800 26px/1 var(--f-display);
+}
+.op-meta {
+  font: 500 13px/1 var(--f-mono);
+  color: var(--muted);
+}
+
+/* Résumé */
+.op-summary {
+  flex: 1;
+  min-height: 0;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+.sum-head {
+  display: flex;
+  align-items: baseline;
+  justify-content: center;
+  gap: 8px;
+  flex: none;
+}
+.sum-head .muted {
+  font: 500 14px/1 var(--f-body);
+  color: var(--soft);
+}
+.sum-head b {
+  font: 800 22px/1 var(--f-display);
+}
+.sum-head .mono {
+  font: 700 14px/1 var(--f-mono);
+}
+.sum-grid {
+  flex: 1;
+  min-height: 0;
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  grid-template-rows: repeat(3, minmax(0, 1fr));
+  gap: 12px 8px;
+}
+.sum-cell {
+  min-width: 0;
+  min-height: 0;
+  padding: 0;
+  border: none;
+  background: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  animation: cardIn 0.45s both;
+}
+.op-summary .btn.big {
+  flex: none;
+}
+.op-summary .col-btns .btn:not(.big) {
+  font-size: 14.5px;
+}

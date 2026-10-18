@@ -1,0 +1,127 @@
+/* ---------- Sachet de booster (proportions 3:5, taille donnée par le conteneur) ---------- */
+.bpack {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 3 / 5;
+  container-type: inline-size;
+  filter: drop-shadow(0 4cqw 7cqw rgba(0, 0, 0, 0.5));
+  user-select: none;
+}
+.bp-body {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 9cqw;
+  bottom: 0;
+  overflow: hidden;
+  background: linear-gradient(
+    165deg,
+    oklch(0.66 0.15 var(--hue)) 0%,
+    oklch(0.52 0.17 var(--hue)) 45%,
+    oklch(0.36 0.14 var(--hue)) 100%
+  );
+}
+.bp-stripes {
+  position: absolute;
+  inset: 0;
+  background: repeating-linear-gradient(115deg, rgba(255, 255, 255, 0.07) 0 5cqw, rgba(255, 255, 255, 0) 5cqw 13cqw);
+}
+.bp-shine {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(115deg, rgba(255, 255, 255, 0) 30%, rgba(255, 255, 255, 0.26) 46%, rgba(255, 255, 255, 0) 60%);
+  background-size: 260% 260%;
+  animation: holoShift 4.5s ease-in-out infinite alternate;
+}
+.bp-glow {
+  position: absolute;
+  left: 50%;
+  top: 58%;
+  width: 96cqw;
+  height: 96cqw;
+  transform: translate(-50%, -50%);
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(255, 214, 90, 0.5) 0%, rgba(255, 214, 90, 0) 62%);
+}
+.bp-logo {
+  position: absolute;
+  left: 12cqw;
+  top: 9cqw;
+  width: 76cqw;
+  height: 28cqw;
+  object-fit: contain;
+  filter: drop-shadow(0 1cqw 2cqw rgba(0, 0, 0, 0.4));
+  pointer-events: none;
+}
+.bp-art {
+  position: absolute;
+  left: 10cqw;
+  top: 42cqw;
+  width: 80cqw;
+  height: 80cqw;
+  object-fit: contain;
+  filter: drop-shadow(0 2cqw 3cqw rgba(0, 0, 0, 0.35));
+  pointer-events: none;
+}
+.bp-text {
+  position: absolute;
+  left: 5cqw;
+  right: 5cqw;
+  bottom: 16cqw;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  gap: 2cqw;
+}
+.bp-name {
+  font: 800 9.5cqw/1 var(--f-display);
+  color: #fff;
+  text-shadow: 0 0.6cqw 2cqw rgba(0, 0, 0, 0.5);
+  letter-spacing: -0.01em;
+}
+.bp-count {
+  font: 600 4.6cqw/1 var(--f-mono);
+  letter-spacing: 0.14em;
+  color: rgba(255, 255, 255, 0.85);
+}
+.bp-crimp,
+.bp-strip {
+  position: absolute;
+  left: 0;
+  right: 0;
+  background: repeating-linear-gradient(90deg, #ececf4 0 2.2cqw, #a7a7ba 2.2cqw 3.4cqw);
+}
+.bp-crimp {
+  bottom: 0;
+  height: 9cqw;
+}
+.bp-strip {
+  top: 0;
+  height: 10cqw;
+  transform-origin: 100% 100%;
+  transition: transform 0.06s linear;
+}
+.bp-tear {
+  position: absolute;
+  left: 0;
+  top: 9.4cqw;
+  height: 1cqw;
+  width: 0;
+  opacity: 0;
+  z-index: 2;
+  background: #fff;
+  box-shadow: 0 0 4cqw #fff, 0 0 9cqw #ffe27a;
+}
+.bpack.torn .bp-strip {
+  transform: translate(40cqw, -70cqw) rotate(32deg) !important;
+  opacity: 0;
+  transition: transform 0.6s cubic-bezier(0.3, 0.7, 0.3, 1), opacity 0.6s;
+}
+@keyframes holoShift {
+  0% {
+    background-position: 0% 0%;
+  }
+  100% {
+    background-position: 100% 100%;
+  }
+}

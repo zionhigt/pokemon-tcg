@@ -11,6 +11,8 @@ export interface BoosterDef {
   price: number;
   /** Couleurs de l'emballage */
   colors: [string, string, string];
+  /** Teinte (oklch) de l'emballage et du fond d'ouverture */
+  hue: number;
   /** Numéro national du Pokémon en mascotte sur l'emballage */
   mascot: number;
   /** Poids de tirage du slot rare (rare, holo, ultra, secret) */
@@ -25,6 +27,7 @@ export const PACK_LAYOUT = { common: 6, uncommon: 3, rare: 1 } as const;
 export const BOOSTERS: BoosterDef[] = [
   {
     id: 'base',
+    hue: 255,
     setId: 'base1',
     tcgdexId: 'base1',
     name: 'Set de Base',
@@ -37,6 +40,7 @@ export const BOOSTERS: BoosterDef[] = [
   },
   {
     id: 'sv1',
+    hue: 5,
     setId: 'sv1',
     tcgdexId: 'sv01',
     name: 'Écarlate & Violet',
@@ -49,6 +53,7 @@ export const BOOSTERS: BoosterDef[] = [
   },
   {
     id: '151',
+    hue: 25,
     setId: 'sv3pt5',
     tcgdexId: 'sv03.5',
     name: 'Pokémon 151',
@@ -61,6 +66,7 @@ export const BOOSTERS: BoosterDef[] = [
   },
   {
     id: 'evs',
+    hue: 175,
     setId: 'swsh7',
     tcgdexId: 'swsh7',
     name: 'Évolution Céleste',
@@ -73,6 +79,7 @@ export const BOOSTERS: BoosterDef[] = [
   },
   {
     id: 'crz',
+    hue: 80,
     setId: 'swsh12pt5',
     tcgdexId: 'swsh12.5',
     name: 'Zénith Suprême',

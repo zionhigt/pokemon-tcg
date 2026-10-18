@@ -87,6 +87,26 @@ function marketPrice(c: ApiCard): number {
   return c.cardmarket?.prices?.trendPrice ?? c.cardmarket?.prices?.averageSellPrice ?? 0;
 }
 
+function computePower(card: Pick<ApiCard, 'hp' | 'attacks'>): number {
+  let value = 0;
+  if (card?.attacks && card.attacks.length > 0) {
+    for (let atk of card.attacks) {
+      const cost = atk?.cost?.length || 1;
+      const damage = atk.damage ? Number.parseInt(atk.damage) : 0;
+      value += damage / cost;
+    }
+  }
+  return value * (card.hp ? parseInt(card.hp) : 0);
+}
+
+/** Score de puissance calculé à la volée (les cartes d'avant le mode Arènes, sans PV, valent 0). */
+export function powerScore(card: Card): number {
+  return computePower({
+    hp: card.hp?.toString(),
+    attacks: card.attacks?.map((a) => ({ name: a.name, cost: a.cost, damage: a.damage.toString() })),
+  });
+}
+
 function toCard(c: ApiCard): Card {
   return {
     id: c.id,

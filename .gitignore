@@ -6,3 +6,4 @@ dev-dist
 
 # Assets téléchargés par `npm run assets` (cache local par projet)
 public/tcg-cache
+trash.js

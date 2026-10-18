@@ -24,8 +24,8 @@ export default defineConfig({
         short_name: 'Booster Shop',
         description: "Achète, ouvre et collectionne des boosters Pokémon.",
         lang: 'fr',
-        theme_color: '#1b1340',
-        background_color: '#0f0b24',
+        theme_color: '#2a2263',
+        background_color: '#0d0b18',
         display: 'standalone',
         orientation: 'portrait',
         start_url: base,
@@ -41,6 +41,16 @@ export default defineConfig({
         // Le cache d'assets local (npm run assets) est trop lourd pour le précache : chargé à la demande.
         globIgnores: ['tcg-cache/**'],
         runtimeCaching: [
+          {
+            // Polices de la refonte (Bricolage Grotesque, IBM Plex) : disponibles hors-ligne
+            urlPattern: /^https:\/\/fonts\.(googleapis|gstatic)\.com\/.*/i,
+            handler: 'CacheFirst',
+            options: {
+              cacheName: 'google-fonts',
+              expiration: { maxEntries: 30, maxAgeSeconds: 60 * 60 * 24 * 365 },
+              cacheableResponse: { statuses: [0, 200] },
+            },
+          },
           {
             urlPattern: /\/tcg-cache\/manifest\.json$/,
             handler: 'NetworkFirst',

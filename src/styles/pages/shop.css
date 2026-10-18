@@ -1,0 +1,214 @@
+/* ---------- Boutique : un set par écran ---------- */
+.boosters {
+  flex: 1;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+.carousel {
+  /* Le carrousel rétrécit sur les petits écrans pour que tout tienne sans défiler */
+  --ch: clamp(170px, calc(100dvh - 560px), 318px);
+  --pw: calc(var(--ch) * 0.553);
+  height: var(--ch);
+  flex: none;
+  margin: 0 calc(-1 * var(--gutter));
+  position: relative;
+  overflow: hidden;
+  touch-action: pan-y;
+}
+.car-rail {
+  height: 100%;
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+.car-item {
+  flex: 0 0 var(--pw);
+  cursor: pointer;
+  transform: scale(0.8);
+  opacity: 0.45;
+  transition: transform 0.4s var(--ease), opacity 0.4s;
+}
+.car-item.on {
+  transform: none;
+  opacity: 1;
+  cursor: default;
+}
+.car-item.on .car-float {
+  animation: floatY 4s ease-in-out infinite;
+}
+.set-info {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  text-align: center;
+  flex: none;
+}
+.set-name {
+  font: 800 25px/1 var(--f-display);
+  letter-spacing: -0.02em;
+}
+.set-tag {
+  font: 400 14px/1.3 var(--f-body);
+  color: var(--muted);
+}
+.set-meta {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  flex-wrap: wrap;
+  justify-content: center;
+  margin-top: 2px;
+}
+.set-meta .good {
+  font: 700 13px/1 var(--f-body);
+}
+.odds-card {
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+  flex: none;
+  padding: 12px 14px;
+  border-radius: 14px;
+  background: var(--surface);
+  box-shadow: inset 0 0 0 1px var(--surface-line);
+}
+.odds-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+}
+.odds-head .mono {
+  font: 500 11px/1 var(--f-mono);
+  color: var(--dim);
+}
+.odds-bar {
+  display: flex;
+  height: 8px;
+  gap: 2px;
+  border-radius: 4px;
+  overflow: hidden;
+}
+.odds-bar span {
+  min-width: 3px;
+  transition: flex 0.3s;
+}
+.odds-legend {
+  display: flex;
+  justify-content: space-between;
+  gap: 6px;
+  flex-wrap: wrap;
+}
+.odds-legend span {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  font: 600 11.5px/1 var(--f-body);
+  color: var(--soft);
+  white-space: nowrap;
+}
+.odds-legend i {
+  width: 7px;
+  height: 7px;
+  border-radius: 2px;
+}
+.odds-legend b {
+  font: 600 11px/1 var(--f-mono);
+  color: var(--text);
+}
+.buy-row {
+  display: flex;
+  gap: 8px;
+  margin-top: auto;
+  flex: none;
+}
+.buy-row .btn.grow {
+  font-size: 15px;
+}
+
+/* ---------- Revente ---------- */
+.sell-view {
+  flex: 1;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+.toggle-row {
+  height: 52px;
+}
+.toggle-row > span:first-child {
+  flex: 1;
+  font: 600 14px/1.25 var(--f-body);
+}
+.sell-tiles {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 10px;
+  flex: none;
+}
+.sell-tile {
+  height: 104px;
+  border: none;
+  border-radius: 18px;
+  cursor: pointer;
+  padding: 14px;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: space-between;
+  text-align: left;
+  background: var(--surface);
+  box-shadow: inset 0 0 0 1px var(--surface-line);
+  color: var(--text);
+}
+.sell-tile:active {
+  transform: scale(0.98);
+}
+.sell-tile.hl {
+  background: linear-gradient(160deg, #3a2f7a, #241e4f);
+  box-shadow: inset 0 0 0 1.5px rgba(255, 203, 5, 0.5);
+}
+.sell-tile.faded {
+  opacity: 0.55;
+  cursor: default;
+}
+.st-head {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+.st-head b {
+  font: 700 15px/1.15 var(--f-body);
+}
+.st-head .mono {
+  font-weight: 500;
+}
+.st-amount {
+  font: 800 20px/1 var(--f-display);
+  color: var(--accent);
+}
+.st-amount.none {
+  color: var(--faint);
+}
+.note {
+  margin: 0;
+  font: 500 12.5px/1.4 var(--f-body);
+  color: var(--muted);
+  flex: none;
+  text-wrap: pretty;
+}
+.unit-row {
+  height: 56px;
+  padding: 0 16px;
+  background: var(--raised);
+  box-shadow: inset 0 0 0 1px var(--raised-line);
+}
+.unit-row b {
+  font: 700 14.5px/1 var(--f-body);
+}
+.unit-row .muted {
+  font: 400 12.5px/1 var(--f-body);
+}
