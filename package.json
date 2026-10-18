@@ -1,7 +1,7 @@
 {
   "name": "pokemon-tcg",
   "private": true,
-  "version": "0.3.1",
+  "version": "0.4.1",
   "description": "Jeu solo d'ouverture de boosters Pokémon : boutique, ouverture animée et galerie.",
   "type": "module",
   "scripts": {
