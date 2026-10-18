@@ -1,4 +1,4 @@
-import { cachedSet } from '../api';
+import { cachedSet, powerScore } from '../api';
 import { cardName, cardRarity, cardSetName, cardTypes, searchText } from '../cardLang';
 import { cardEl } from '../components/card';
 import { BOOSTERS } from '../data/boosters';
@@ -7,7 +7,7 @@ import { TIERS, TIER_LABEL, tierIndex, type Tier } from '../rarity';
 import { confirmSale } from '../sell';
 import { getState, planSale, subscribe, toggleFavorite, type OwnedCard } from '../state';
 
-type Sort = 'value' | 'rarity' | 'recent' | 'name' | 'number';
+type Sort = 'value' | 'rarity' | 'recent' | 'name' | 'number' | 'power';
 
 interface Filters {
   q: string;
@@ -33,6 +33,8 @@ function sorter(sort: Sort): (a: OwnedCard, b: OwnedCard) => number {
   switch (sort) {
     case 'value':
       return (a, b) => b.value - a.value;
+    case 'power':
+      return (a, b) => (powerScore(b.card) - powerScore(a.card)) || (b?.card?.hp || 0) - (a?.card?.hp || 0);
     case 'rarity':
       return (a, b) => tierIndex(b.card.tier) - tierIndex(a.card.tier) || b.value - a.value;
     case 'recent':
@@ -86,6 +88,7 @@ export function galleryPage(root: HTMLElement): () => void {
   };
   const sorts: [Sort, string][] = [
     ['rarity', 'Rareté'],
+    ['power', 'Puissance'],
     ['value', 'Valeur'],
     ['recent', 'Récentes'],
     ['name', 'Nom'],
